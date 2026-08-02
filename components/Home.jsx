@@ -2,8 +2,7 @@
 
 import {Canvas} from "@react-three/fiber";
 import {useGLTF} from "@react-three/drei";
-import {useState, Suspense, useEffect, useRef} from "react";
-import Image from "next/image";
+import {useState, Suspense, useEffect} from "react";
 import Loader from "./Loader";
 import Island from "./models/Island";
 import Sky from "./models/Sky";
@@ -16,31 +15,11 @@ import HomeInfo from "./HomeInfo";
 useGLTF.preload("/3d/fox.glb");
 
 const Home = () => {
-    const audioRef = useRef(null);
-
-    useEffect(() => {
-        // Audio must be created client-side only (new Audio() needs window)
-        audioRef.current = new Audio("/audio/sakura.mp3");
-        audioRef.current.volume = 0.4;
-        audioRef.current.loop = true;
-    }, []);
-
     const [isRotating, setIsRotating] = useState(false);
     const [currentStage, setCurrentStage] = useState(1);
-    const [isPlayingMusic, setIsPlayingMusic] = useState(false);
     const [planeDirection, setPlaneDirection] = useState(1);
     const [hasInteracted, setHasInteracted] = useState(false);
     const [pointerDirection, setPointerDirection] = useState(0);
-    
-    useEffect(()=>{
-        if(isPlayingMusic && audioRef.current){
-            audioRef.current.play();
-        }
-        return()=>{
-            if (audioRef.current) audioRef.current.pause();
-        }
-
-    }, [isPlayingMusic])
 
     const adjustIslandForScreenSize = () => {
         let screenScale, screenPosition;
@@ -130,36 +109,6 @@ const Home = () => {
                     />
                 </Suspense>
             </Canvas>
-            <div
-                data-no-rotate
-                className="absolute bottom-2 left-2 z-10 flex items-center"
-                onPointerDown={(e) => e.stopPropagation()}
-            >
-                <Image
-                    src={!isPlayingMusic ? "/icons/soundoff.png" : "/icons/soundon.png"}
-                    alt="Sound"
-                    width={40}
-                    height={40}
-                    className="w-10 h-10 cursor-pointer object-contain"
-                    onPointerDown={(e) => {
-                        e.stopPropagation();
-                        setIsPlayingMusic((prev) => !prev);
-                        setHasInteracted(true);
-                    }}
-                />
-                    {!hasInteracted && (
-                <div className="ml-4 flex items-center gap-3 pointer-events-none animate-pulse">
-                    <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex justify-center items-center shadow-lg border border-white/30">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
-                    </div>
-                    <p className="bg-black/30 text-white font-semibold px-3 py-1.5 rounded-2xl backdrop-blur-sm hidden sm:block text-sm">
-                        Click for music
-                    </p>
-                </div>
-            )}
-            </div>
             {!hasInteracted && (
                 <div className="absolute right-5 lg:right-10 top-1/2 -translate-y-1/2 flex items-center gap-3 z-10 pointer-events-none animate-pulse">
                     <p className="bg-black/30 text-white font-semibold px-4 py-2 rounded-2xl backdrop-blur-sm hidden sm:block text-sm">

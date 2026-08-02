@@ -13,7 +13,7 @@ const Contact = () => {
     const formRef = useRef();
     const [form,setform] = useState({name:"",email:"",message:""});
     const [isLoading,setIsLoading] = useState(false);
-    const [currentAnimation,setCurrentAnimation] = useState("Idle");
+    const [currentAnimation, setCurrentAnimation] = useState("idle");
     const {alert, showAlert, hideAlert} = useAlert();
 
     const handleChange = (e) => {
@@ -41,12 +41,12 @@ const Contact = () => {
             showAlert({text:"Message Sent Successfully",type:"Success"});
             setTimeout(() => {
                 hideAlert();
-                setCurrentAnimation("Idle");
+                setCurrentAnimation("idle");
                 setform({name:"",email:"",message:""});
             }, [3000]);
         }, (error) => {
             setIsLoading(false);
-            setCurrentAnimation("Idle");
+            setCurrentAnimation("idle");
             showAlert({text:"Failed to send message",type:"Danger"});
             console.error(error);
         });

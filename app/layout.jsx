@@ -1,6 +1,7 @@
 import './globals.css';
 import { Poppins, Work_Sans } from 'next/font/google';
 import NavBar from '@/components/NavBar';
+import MusicPlayer from '@/components/MusicPlayer';
 
 // next/font downloads and self-hosts these at build time (no runtime request
 // to fonts.googleapis.com, no render-blocking @import, no layout shift).
@@ -24,6 +25,7 @@ export default function RootLayout({ children }) {
       <body>
         <NavBar />
         {children}
+        <MusicPlayer />
       </body>
     </html>
   );

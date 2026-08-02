@@ -3,10 +3,11 @@
 import {useGLTF, useAnimations} from '@react-three/drei';
 import {useRef, useEffect} from 'react'
 
-const Fox = ({currentAnimation,...props}) => {
+const Fox = ({currentAnimation = "idle", ...props}) => {
     const group = useRef();
     const {nodes, materials, animations} = useGLTF("/3d/fox.glb");
     const {actions} = useAnimations(animations, group);
+    
 
     useEffect (()=>{
         Object.values(actions).forEach((action) => {

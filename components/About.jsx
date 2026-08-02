@@ -1,16 +1,51 @@
+'use client';
+
+import Image from "next/image";
 import {VerticalTimeline, VerticalTimelineElement} from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import CTA from "./CTA";
-import {skills, experiences} from "../constants";
+import {skills, experiences, socialLinks} from "../constants";
 
+// Only show GitHub/LinkedIn here — "Contact" already has its own page/CTA.
+const aboutSocials = socialLinks.filter((s) => s.name === "GitHub" || s.name === "LinkedIn");
 
 const About = () => {
     return (
         <section className="max-container ">
-            <h1 className="head-text">
-                Hi, I'm <span className="blue-gradient_text
-                font-semibold drop-shadow">Belal</span> <br />
-            </h1>
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8">
+                <div className="relative shrink-0 w-40 h-40 sm:w-48 sm:h-48 rounded-full p-1.5 bg-gradient-to-br from-[#00c6ff] to-[#0072ff] shadow-lg">
+                    <div className="w-full h-full rounded-full overflow-hidden border-4 border-white bg-white">
+                        <Image
+                            src="/images/belal.jpg"
+                            alt="Belal"
+                            width={192}
+                            height={192}
+                            className="w-full h-full object-cover"
+                            priority
+                        />
+                    </div>
+                </div>
+                <div className="flex flex-col gap-4">
+                    <h1 className="head-text">
+                        Hi, I'm <span className="blue-gradient_text
+                        font-semibold drop-shadow">Belal</span> <br />
+                    </h1>
+                    <div className="flex gap-4">
+                        {aboutSocials.map((social) => (
+                            <a
+                                key={social.name}
+                                href={social.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all border border-slate-100"
+                            >
+                                <Image src={social.iconUrl} alt={social.name} width={20} height={20} className="w-5 h-5 object-contain" />
+                                <span className="text-sm font-medium text-slate-700">{social.name}</span>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            </div>
             <div className="mt-5 flex flex-col gap-3 text-slate-500">
                 <p> I'm a full-stack developer and Computer Science & Artificial
                     Intelligence student at Cairo University, based in Giza, Egypt.
