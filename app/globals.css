@@ -317,6 +317,18 @@ body:has(.card[data-color="green"]:hover) {
   overflow: hidden;
 }
 
+@media (max-width: 640px) {
+  .block-container .btn-back {
+    box-shadow: none;
+    will-change: auto;
+  }
+
+  .block-container .btn-front {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
 .block-container:hover > .btn-back {
   transform: translateZ(20px) rotateZ(15deg) rotateX(-20deg) rotateY(-20deg);
 }
