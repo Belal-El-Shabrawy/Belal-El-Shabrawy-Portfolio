@@ -1,6 +1,7 @@
 import {projects} from "../constants";
 import Link from "next/link";
 import CTA from "./CTA";
+import Image from "next/image";
 
 const Projects = () => {
     return (
@@ -10,15 +11,24 @@ const Projects = () => {
                 font-semibold drop-shadow">Projects</span> <br />
             </h1>
             <div className="mt-5 flex flex-col gap-3 text-slate-500">
-                <p> I'm a full-stack developer and Computer Science & Artificial
-                    Intelligence student at Cairo University, based in Giza, Egypt.
-                    I enjoy working across the whole stack, from building responsive,
-                    intuitive interfaces to wiring up backends, databases, and AI-powered
-                    integrations.</p>
+                <p>A few things I've built and shipped — from an AI-integrated
+                WhatsApp bot handling real patient bookings, to a real-time
+                social app with type-safe state management. Each one taught
+                me something different about taking a product from idea to
+                production.</p>
             </div>
             <div className="my-20 flex flex-wrap gap-16">
                 {projects.map((project) => (
                     <div className="lg:w-[400px] w-full" key={project.name}>
+                        {project.imageUrl && (
+                            <Image
+                                src={project.imageUrl}
+                                alt={`${project.name} screenshot`}
+                                width={400}
+                                height={220}
+                                className="w-full h-48 object-cover rounded-xl mb-4 border-2 border-black"
+                            />
+                        )}
                         <div className="block-container w-12 h-12">
                             <div className={`btn-back rounded-xl ${project.theme}`}/>
                             <div className="btn-front rounded-xl flex items-center justify-center">
@@ -43,7 +53,7 @@ const Projects = () => {
                                 rel="noopener noreferrer"
                                 className="font-semibold text-blue-500 hover:text-blue-700"
                                 >
-                                    Live Demo
+                                {project.linkLabel || 'Live Demo'}
                                 </Link>
                                 <img src="/icons/arrow.svg" alt="Arrow" 
                                 className="w-4 h-4 object-contain" />

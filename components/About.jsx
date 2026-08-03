@@ -43,6 +43,13 @@ const About = () => {
                                 <span className="text-sm font-medium text-slate-700">{social.name}</span>
                             </a>
                         ))}
+                        <a
+                            href="/Belal_Alaa_CV.pdf"
+                            download
+                            className="flex items-center gap-2 px-4 py-2 rounded-full bg-black shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                        >
+                            <span className="text-sm font-medium text-white">Download CV</span>
+                        </a>
                     </div>
                 </div>
             </div>
