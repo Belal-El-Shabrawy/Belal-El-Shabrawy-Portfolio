@@ -11,7 +11,7 @@ const Projects = () => {
                 font-semibold drop-shadow">Projects</span> <br />
             </h1>
             <div className="mt-5 flex flex-col gap-3 text-slate-500">
-                <p>A few things I've built and shipped — from an AI-integrated
+                <p>A few things I've built and shipped - from an AI-integrated
                 WhatsApp bot handling real patient bookings, to a real-time
                 social app with type-safe state management. Each one taught
                 me something different about taking a product from idea to
