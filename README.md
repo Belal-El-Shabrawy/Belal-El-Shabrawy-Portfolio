@@ -15,9 +15,9 @@ An interactive 3D developer portfolio built with Next.js, React Three Fiber, and
 npm install
 npm run dev
 ```
-Open http://localhost:3000. You'll need EmailJS env vars for the contact form to work — see `.env.example` (or ask, if you don't have one yet).
+Open http://localhost:3000. You'll need EmailJS env vars for the contact form to work - see `.env.example` (or ask, if you don't have one yet).
 
 ## Structure
-- `app/` — routes (home, about, projects, contact)
-- `components/` — page sections and 3D models
-- `constants/` — skills, experience, and project data
+- `app/` - routes (home, about, projects, contact)
+- `components/` - page sections and 3D models
+- `constants/` - skills, experience, and project data
