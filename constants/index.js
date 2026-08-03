@@ -144,6 +144,7 @@ export const projects = [
         name: 'Hospital WhatsApp Bot',
         description: 'A live WhatsApp bot built with Node.js/Express that lets patients book medications and doctor appointments through conversational flows. Integrates the Groq AI API to read prescriptions and insurance cards, with Firebase and AWS Textract handling data storage and extraction.',
         link: 'https://github.com/Belal-El-Shabrawy/Hospital-Whatsapp-Bot',
+        linkLabel: 'View Source',
     },
     {
         imageUrl: "/projects/SocialMedia.png",
