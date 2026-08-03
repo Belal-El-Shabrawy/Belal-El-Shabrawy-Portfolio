@@ -1,4 +1,4 @@
-# Belal El-Shabrawy — Portfolio
+# Belal El-Shabrawy - Portfolio
 
 An interactive 3D developer portfolio built with Next.js, React Three Fiber, and Tailwind CSS.
 
