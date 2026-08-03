@@ -133,34 +133,26 @@ export const socialLinks = [
 
 export const projects = [
     {
-        iconUrl: "/icons/summiz.svg",
         imageUrl: "/projects/PortfolioGenie.png",
-        theme: 'btn-back-yellow',
         name: 'PortfolioGenie',
         description: 'An AI-powered developer portfolio generator built with React.js and component-driven architecture, as the DEPI graduation team project. Implements dynamic routing and prompt-engineering techniques to turn user input into personalized portfolio pages.',
         link: 'https://github.com/Basel-Ahmed-TECH/DEPI-React-GP',
         linkLabel: 'View Source',
     },
     {
-        iconUrl: "/icons/contact.svg",
         imageUrl: "/projects/Hospital.png",
-        theme: 'btn-back-green',
         name: 'Hospital WhatsApp Bot',
         description: 'A live WhatsApp bot built with Node.js/Express that lets patients book medications and doctor appointments through conversational flows. Integrates the Groq AI API to read prescriptions and insurance cards, with Firebase and AWS Textract handling data storage and extraction.',
         link: 'https://github.com/Belal-El-Shabrawy/Hospital-Whatsapp-Bot',
     },
     {
-        iconUrl: "/icons/snapgram.svg",
         imageUrl: "/projects/SocialMedia.png",
-        theme: 'btn-back-pink',
         name: 'Firebase Social Media App',
         description: 'A full social media web app built with React, TypeScript, and Vite, using Firebase (Firestore & Authentication) as the backend. Features real-time posts, user authentication, and a responsive, mobile-first UI with type-safe state management.',
         link: 'https://socialmedia-fe-lbeet.web.app/',
     },
     {
-        iconUrl: "/icons/car.svg",
         imageUrl: "/projects/MovieViewer.png",
-        theme: 'btn-back-blue',
         name: 'Movie Viewer Application',
         description: 'A full-stack app built with a team using PHP/Laravel and JavaScript, handling async CRUD actions and integrating external movie APIs for dynamic search and feeds. Includes XSS-safe input sanitization and a responsive, cross-browser layout.',
         link: 'https://movieviewer.infinityfreeapp.com/?i=3',
