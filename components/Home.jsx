@@ -35,20 +35,24 @@ const Home = () => {
     //
     // 1.5 is roughly the aspect a laptop gives, where scale 1 framed well; the
     // floor stops the island shrinking to a speck on very tall viewports.
+    // The floor is deliberately past the point where the island fits edge to
+    // edge: on a phone it overhangs by roughly a tenth of the screen on each
+    // side, which reads far better than a fully-contained miniature. Only the
+    // outer rim is lost, never the house.
     const fit = useMemo(
-        () => Math.min(1, Math.max(0.44, aspect / 1.5)),
+        () => Math.min(1, Math.max(0.62, aspect / 1.5)),
         [aspect]
     );
 
     // 0 on the narrowest screens, 1 once there is desktop room. The plane is
     // interpolated across it so both ends land exactly on the values this
     // scene was originally tuned to.
-    const t = useMemo(() => (fit - 0.44) / (1 - 0.44), [fit]);
+    const t = useMemo(() => (fit - 0.62) / (1 - 0.62), [fit]);
 
     const islandScale = useMemo(() => [fit, fit, fit], [fit]);
     // Drop the island a little as it shrinks, so it sits in the middle of a
     // tall screen instead of riding up with a dead band underneath.
-    const islandPosition = useMemo(() => [0, -6.5 * Math.max(fit, 0.62), -43], [fit]);
+    const islandPosition = useMemo(() => [0, -6.5 * fit, -43], [fit]);
     const islandRotation = useMemo(() => [0.1, 4.7, 0], []);
 
     const planeScale = useMemo(() => {
@@ -60,9 +64,9 @@ const Home = () => {
 
     return (
         <section className="w-full h-screen-safe overflow-hidden relative">
-            {<div className="absolute top-28 left-0 right-0 z-10 flex items-center justify-center">
-                {currentStage && <HomeInfo currentStage={currentStage} />}
-            </div>}
+            {/* HomeInfo positions itself; a second absolute wrapper here just
+                added its top offset on top of HomeInfo's own. */}
+            {currentStage && <HomeInfo currentStage={currentStage} />}
             <Canvas 
                 className={`w-full h-full bg-transparent ${isRotating ? 'cursor-grabbing' : 'cursor-grab'}`} 
                 onPointerDown={(e) => {

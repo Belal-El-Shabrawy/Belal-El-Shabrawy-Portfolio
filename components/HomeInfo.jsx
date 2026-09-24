@@ -5,11 +5,11 @@ import Link from 'next/link';
 
 const InfoBox = ({ text, link, btnText, gradient }) => {
     return (
-        <div className={`sm:text-xl sm:leading-snug text-center py-4 px-8 text-white mx-5 rounded-xl transition-transform hover:-translate-y-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-4 border-black ${gradient}`}>
-            <p className="font-medium sm:text-xl text-center mb-5">{text}</p>
+        <div className={`text-sm sm:text-xl sm:leading-snug text-center py-3 px-4 sm:py-4 sm:px-8 text-white mx-4 sm:mx-5 max-w-md sm:max-w-none rounded-xl transition-transform hover:-translate-y-1 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-2 sm:border-4 border-black ${gradient}`}>
+            <p className="font-medium text-sm sm:text-xl text-center mb-3 sm:mb-5">{text}</p>
             <Link 
                 href={link} 
-                className="bg-white text-black flex justify-center items-center gap-3 w-max mx-auto px-6 py-2.5 rounded-lg border-2 border-black hover:bg-black hover:text-white transition-colors font-bold"
+                className="bg-white text-black flex justify-center items-center gap-2 sm:gap-3 w-max mx-auto px-4 py-2 text-sm sm:px-6 sm:py-2.5 sm:text-base rounded-lg border-2 border-black hover:bg-black hover:text-white transition-colors font-bold"
             >
                 {btnText}
                 <Image src="/icons/arrow.svg" width={16} height={16} className="w-4 h-4 object-contain invert hover:invert-0 transition-all" alt="arrow" />
@@ -21,7 +21,7 @@ const InfoBox = ({ text, link, btnText, gradient }) => {
 const renderContent = {
     // Grade 1: Light & welcoming (Sky to Blue)
     1: (
-        <h1 className="sm:text-xl sm:leading-snug text-center bg-gradient-to-br from-sky-400 to-blue-500 py-4 px-8 text-white mx-5 rounded-xl transition-transform hover:-translate-y-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-4 border-black">
+        <h1 className="text-sm sm:text-xl sm:leading-snug text-center bg-gradient-to-br from-sky-400 to-blue-500 py-3 px-4 sm:py-4 sm:px-8 text-white mx-4 sm:mx-5 max-w-md sm:max-w-none rounded-xl transition-transform hover:-translate-y-1 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-2 sm:border-4 border-black">
             Hi, I&apos;m <span className="font-semibold">Belal El-Shabrawy 👋</span><br/>
             A Full-Stack Developer From Egypt.
         </h1>
@@ -58,7 +58,7 @@ const renderContent = {
 const HomeInfo = ({ currentStage }) => {
     if(!currentStage) return null;
     return (
-        <div className="home-info absolute top-28 left-0 right-0 z-10 flex items-center justify-center" onPointerDown={(e) => e.stopPropagation()}>
+        <div className="home-info absolute top-20 sm:top-28 left-0 right-0 z-10 flex items-center justify-center" onPointerDown={(e) => e.stopPropagation()}>
             {renderContent[currentStage]}
         </div>
     );
