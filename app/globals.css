@@ -75,7 +75,8 @@ body:has(.card[data-color="green"]:hover) {
     color: transparent;
   }
 
-  .input {
+  .input,
+  .input-field {
     display: block;
     width: 100%;
     padding: 0.625rem;
@@ -90,6 +91,7 @@ body:has(.card[data-color="green"]:hover) {
   }
 
   .input:focus,
+  .input-field:focus,
   .textarea:focus {
     border-color: #3b82f6;
     outline: none;
@@ -334,4 +336,283 @@ body:has(.card[data-color="green"]:hover) {
   border: #fff;
   box-shadow: 0.6vmin 0.6vmin #fff, 1vmin 1vmin #d2e4ff, 1vmin 1vmin #d2e4ff,
     0.65vmin 1vmin #d2e4ff, 1vmin 0.65vmin #d2e4ff;
+}
+
+/* ---- Concurrent roles: the timeline forks so two overlapping jobs read as
+   running side by side rather than one after the other. Line colour, width and
+   position all mirror react-vertical-timeline-component so the fork joins its
+   line cleanly at both ends. ---- */
+.concurrent {
+  position: relative;
+  width: 95%;
+  max-width: 1170px;
+  margin: 0 auto;
+  padding-top: 2em;
+}
+
+.concurrent-date {
+  text-align: center;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.concurrent-note {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* stem down from the label, then a bar out to each branch */
+.concurrent-fork {
+  position: relative;
+  height: 48px;
+}
+
+.concurrent-fork::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -2px;
+  width: 4px;
+  height: 24px;
+  background-color: #cbd5e1;
+}
+
+.concurrent-fork::after {
+  content: '';
+  position: absolute;
+  top: 24px;
+  left: 25%;
+  right: 25%;
+  height: 4px;
+  background-color: #cbd5e1;
+}
+
+.concurrent-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.concurrent-col {
+  position: relative;
+  /* bottom padding keeps the taller card's coloured border off the merge bar,
+     which otherwise sits flush against it and hides half the line */
+  padding: 0 1.5rem 2.5rem;
+}
+
+/* each branch's own vertical line, running behind its icon and card */
+.concurrent-col::before {
+  content: '';
+  position: absolute;
+  top: -24px;
+  bottom: 0;
+  left: 50%;
+  margin-left: -2px;
+  width: 4px;
+  background-color: #cbd5e1;
+}
+
+.concurrent-icon {
+  position: relative;
+  z-index: 1;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 4px #cbd5e1;
+}
+
+.concurrent-card {
+  position: relative;
+  z-index: 1;
+  background: #fff;
+  border-radius: 0.25em;
+  padding: 1em 2em;
+}
+
+/* branches rejoin, and the stem carries on into the library's timeline */
+.concurrent-merge {
+  position: relative;
+  height: 48px;
+}
+
+.concurrent-merge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 25%;
+  right: 25%;
+  height: 4px;
+  background-color: #cbd5e1;
+}
+
+.concurrent-merge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -2px;
+  width: 4px;
+  height: 48px;
+  background-color: #cbd5e1;
+}
+
+/* Below the library's own breakpoint it drops to a single left-hand line, so
+   the fork does too: the branches stack and share one continuous line. */
+@media only screen and (max-width: 1169px) {
+  .concurrent-date,
+  .concurrent-note {
+    text-align: left;
+    padding-left: 60px;
+  }
+
+  .concurrent-fork {
+    height: 24px;
+  }
+
+  .concurrent-fork::before {
+    left: 18px;
+    height: 24px;
+  }
+
+  .concurrent-fork::after {
+    display: none;
+  }
+
+  .concurrent-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .concurrent-col {
+    padding: 0 0 2rem 60px;
+    min-height: 60px;
+  }
+
+  .concurrent-col::before {
+    top: 0;
+    bottom: -1px;
+    left: 18px;
+    margin-left: 0;
+  }
+
+  .concurrent-icon {
+    position: absolute;
+    top: 0;
+    left: 18px;
+    margin: 0;
+    width: 40px;
+    height: 40px;
+    transform: translateX(-50%);
+  }
+
+  .concurrent-merge {
+    height: 24px;
+  }
+
+  .concurrent-merge::before {
+    display: none;
+  }
+
+  .concurrent-merge::after {
+    left: 18px;
+    margin-left: 0;
+    height: 24px;
+  }
+}
+
+/* ================= Dark theme =================
+   Deliberately unlayered: these have to beat both the @layer utilities block
+   above and the timeline library's own stylesheet, whatever the source order.
+   The 3D island scene keeps its own daylight palette — only the page chrome
+   and the document-style pages switch. */
+
+/* -- timeline -- */
+.dark .vertical-timeline::before {
+  background-color: #334155 !important;
+}
+
+.dark .vertical-timeline-element-content {
+  background: #1e293b !important;
+  color: #e2e8f0;
+}
+
+.dark .vertical-timeline-element-content-arrow {
+  border-right-color: #1e293b !important;
+}
+
+.dark .vertical-timeline-element-date {
+  color: #cbd5e1;
+}
+
+/* -- the concurrent-roles fork -- */
+.dark .concurrent-date {
+  color: #e2e8f0;
+}
+
+.dark .concurrent-note {
+  color: #94a3b8;
+}
+
+.dark .concurrent-fork::before,
+.dark .concurrent-fork::after,
+.dark .concurrent-col::before,
+.dark .concurrent-merge::before,
+.dark .concurrent-merge::after {
+  background-color: #334155;
+}
+
+.dark .concurrent-icon {
+  box-shadow: 0 0 0 4px #334155;
+}
+
+.dark .concurrent-card {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+/* -- skill / project cards -- */
+.dark .block-container .btn-front {
+  background-color: rgba(30, 41, 59, 0.6);
+}
+
+.dark .block-container .btn-back {
+  box-shadow: 16px 0 40px #020617;
+}
+
+/* -- contact form -- */
+.dark .input,
+.dark .input-field,
+.dark .textarea {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-color: #334155;
+}
+
+.dark .input::placeholder,
+.dark .input-field::placeholder,
+.dark .textarea::placeholder {
+  color: #64748b;
+}
+
+/* -- odds and ends -- */
+.dark .logo {
+  background: #1e293b;
+}
+
+.dark .cta-text {
+  color: #e2e8f0;
+}
+
+.dark .neo-brutalism-white {
+  background: #1e293b;
+}
+
+.dark .neo-btn {
+  background: #1e293b;
+  color: #60a5fa;
 }

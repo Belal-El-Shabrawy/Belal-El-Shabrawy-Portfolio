@@ -10,7 +10,7 @@ const Projects = () => {
                 My <span className="blue-gradient_text
                 font-semibold drop-shadow">Projects</span> <br />
             </h1>
-            <div className="mt-5 flex flex-col gap-3 text-slate-500">
+            <div className="mt-5 flex flex-col gap-3 text-slate-500 dark:text-slate-400">
                 <p>A few things I&apos;ve built and shipped - from an AI-integrated
                 WhatsApp bot handling real patient bookings, to a real-time
                 social app with type-safe state management. Each one taught
@@ -26,14 +26,14 @@ const Projects = () => {
                                 alt={`${project.name} screenshot`}
                                 width={400}
                                 height={220}
-                                className="w-full h-48 object-cover rounded-xl mb-4 border-2 border-black"
+                                className="w-full h-48 object-cover rounded-xl mb-4 border-2 border-black dark:border-slate-600"
                             />
                         )}
                         <div className="mt-5 flex flex-col">
                             <h4 className="text-2xl font-poppins font-semibold">
                                 {project.name}
                             </h4>
-                            <p className="mt-2 text-slate-500">
+                            <p className="mt-2 text-slate-500 dark:text-slate-400">
                                 {project.description}
                             </p>
                             <div className="mt-5 flex items-center gap-2 font-poppins">
@@ -53,7 +53,7 @@ const Projects = () => {
                     </div>
                 ))}
             </div>
-            <hr className="border-slate-200" />
+            <hr className="border-slate-200 dark:border-slate-700" />
             <CTA/>
         </section>
     );

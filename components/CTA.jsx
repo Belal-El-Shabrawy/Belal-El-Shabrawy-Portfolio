@@ -3,7 +3,7 @@ import Link from "next/link";
 const CTA = () => {
     return (
         <section className="cta">
-            <p className="cta-text text-black text-center w-full">
+            <p className="cta-text text-black dark:text-slate-100 text-center w-full">
                 Have a project in mind? <br className="sm:block hidden" />
                 Let&apos;s build something together!
             </p>

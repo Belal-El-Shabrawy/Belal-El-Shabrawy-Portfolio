@@ -94,6 +94,7 @@ export const experiences = [
     {
         title: "Software Engineer (Full-time)",
         company_name: "Clinica Joelle",
+        current: true,
         icon: "/icons/clinic.svg",
         iconBg: "#e6d3a3",
         date: "2026 - Present",
@@ -106,6 +107,7 @@ export const experiences = [
     {
         title: "Software Engineer (Part-time)",
         company_name: "CSDS - Cairo University",
+        current: true,
         icon: "/icons/cms.svg",
         iconBg: "#ffd8a8",
         date: "2026 - Present",

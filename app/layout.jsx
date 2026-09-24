@@ -59,8 +59,23 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${poppins.variable} ${workSans.variable}`}>
-      <body>
+    <html
+      lang="en"
+      className={`${poppins.variable} ${workSans.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        {/* Runs before first paint so the page never flashes light then jumps
+            to dark. It only sets the class; ThemeToggle reads it back after
+            hydration. suppressHydrationWarning above is required because this
+            makes the client's <html> class differ from the server's. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark');}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body className="bg-white text-black transition-colors dark:bg-slate-900 dark:text-slate-100">
         <NavBar />
         {children}
         <MusicPlayer />
