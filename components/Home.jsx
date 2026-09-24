@@ -6,9 +6,11 @@ import {useState, Suspense, useEffect, useMemo} from "react";
 import Loader from "./Loader";
 import Island from "./models/Island";
 import Sky from "./models/Sky";
+import NightSky from "./models/NightSky";
 import Bird from "./models/Bird";
 import Plane from "./models/Plane";
 import HomeInfo from "./HomeInfo";
+import { useIsDark } from "../hooks/useIsDark";
 
 // Warm the Contact page's fox model in the background while the user is
 // already on Home, so /contact doesn't stall on model download+parse later.
@@ -21,6 +23,7 @@ const Home = () => {
     const [hasInteracted, setHasInteracted] = useState(false);
     const [pointerDirection, setPointerDirection] = useState(0);
 
+    const isDark = useIsDark();
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
@@ -65,12 +68,18 @@ const Home = () => {
                 camera={{near: 0.1, far: 1000}}
             >
                 <Suspense fallback={<Loader />}>
-                    <directionalLight position={[1, 1, 1]} intensity={2}/>
-                    <ambientLight intensity={0.5}/>
-                    <hemisphereLight skyColor="#b1e1ff" groundColor="#000000" intensity={1}/>
+                    {/* Moonlight at night: the same rig, turned down, so the
+                        island reads as lit from a cold sky rather than the sun. */}
+                    <directionalLight position={[1, 1, 1]} intensity={isDark ? 0.7 : 2}/>
+                    <ambientLight intensity={isDark ? 0.22 : 0.5}/>
+                    <hemisphereLight
+                        skyColor={isDark ? "#2b3c63" : "#b1e1ff"}
+                        groundColor="#000000"
+                        intensity={isDark ? 0.45 : 1}
+                    />
 
                     <Bird/>
-                    <Sky isRotating={isRotating}/>
+                    {isDark ? <NightSky isRotating={isRotating}/> : <Sky isRotating={isRotating}/>}
                     
                     <Island 
                         position={islandPosition} 

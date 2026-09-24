@@ -1,34 +1,17 @@
 'use client';
 
-import { useEffect, useSyncExternalStore } from 'react';
+import { useEffect } from 'react';
+import { useIsDark } from '../hooks/useIsDark';
 
 // The <html> class is set before first paint by the inline script in
-// app/layout.jsx. This component treats that class as the source of truth and
-// subscribes to it, rather than keeping a second copy of the state in React —
-// which also means no setState during an effect, and no hydration mismatch
-// (useSyncExternalStore renders the server snapshot, then re-syncs).
-const subscribe = (onChange) => {
-    const observer = new MutationObserver(onChange);
-    observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class'],
-    });
-    const media = window.matchMedia('(prefers-color-scheme: dark)');
-    media.addEventListener('change', onChange);
-    return () => {
-        observer.disconnect();
-        media.removeEventListener('change', onChange);
-    };
-};
-
-const getSnapshot = () => document.documentElement.classList.contains('dark');
-const getServerSnapshot = () => false;
-
+// app/layout.jsx and read back through useIsDark, so the class stays the single
+// source of truth — this button writes to it and everything else, including the
+// 3D night sky on the home page, reacts to it.
 const ThemeToggle = () => {
-    const isDark = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+    const isDark = useIsDark();
 
     // Follow the OS setting for as long as the visitor hasn't chosen for
-    // themselves. Touches the DOM only; the observer above picks the change up.
+    // themselves. Touches the DOM only; useIsDark's observer picks the change up.
     useEffect(() => {
         const media = window.matchMedia('(prefers-color-scheme: dark)');
         const onChange = (e) => {
