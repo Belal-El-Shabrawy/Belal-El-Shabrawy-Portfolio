@@ -2,7 +2,7 @@
 
 import {Canvas} from "@react-three/fiber";
 import {useGLTF} from "@react-three/drei";
-import {useState, Suspense, useEffect, useMemo} from "react";
+import {useState, Suspense, useMemo} from "react";
 import Loader from "./Loader";
 import Island from "./models/Island";
 import Sky from "./models/Sky";
@@ -11,6 +11,7 @@ import Bird from "./models/Bird";
 import Plane from "./models/Plane";
 import HomeInfo from "./HomeInfo";
 import { useIsDark } from "../hooks/useIsDark";
+import { useViewport } from "../hooks/useViewport";
 
 // Warm the Contact page's fox model in the background while the user is
 // already on Home, so /contact doesn't stall on model download+parse later.
@@ -24,28 +25,41 @@ const Home = () => {
     const [pointerDirection, setPointerDirection] = useState(0);
 
     const isDark = useIsDark();
-    const [isMobile, setIsMobile] = useState(false);
+    const { aspect } = useViewport();
 
-    useEffect(() => {
-        // Sizes used to be read straight off window.innerWidth during render,
-        // so the scene never reacted to a resize or a phone rotating.
-        const query = window.matchMedia("(max-width: 767px)");
-        const sync = (e) => setIsMobile(e.matches);
-        sync(query);
-        query.addEventListener("change", sync);
-        return () => query.removeEventListener("change", sync);
-    }, []);
+    // three.js `fov` is vertical, so a tall narrow screen has a *much* smaller
+    // horizontal field of view. The island is wide and flat, so on a phone it
+    // used to run off both edges. Sizing off the aspect ratio keeps the whole
+    // island in frame at any shape of screen, instead of a mobile/desktop flag
+    // that only has two answers.
+    //
+    // 1.5 is roughly the aspect a laptop gives, where scale 1 framed well; the
+    // floor stops the island shrinking to a speck on very tall viewports.
+    const fit = useMemo(
+        () => Math.min(1, Math.max(0.44, aspect / 1.5)),
+        [aspect]
+    );
 
-    // Memoised so Island and Plane don't get fresh array props every render.
-    const islandPosition = useMemo(() => [0, -6.5, -43], []);
+    // 0 on the narrowest screens, 1 once there is desktop room. The plane is
+    // interpolated across it so both ends land exactly on the values this
+    // scene was originally tuned to.
+    const t = useMemo(() => (fit - 0.44) / (1 - 0.44), [fit]);
+
+    const islandScale = useMemo(() => [fit, fit, fit], [fit]);
+    // Drop the island a little as it shrinks, so it sits in the middle of a
+    // tall screen instead of riding up with a dead band underneath.
+    const islandPosition = useMemo(() => [0, -6.5 * Math.max(fit, 0.62), -43], [fit]);
     const islandRotation = useMemo(() => [0.1, 4.7, 0], []);
-    const islandScale = useMemo(() => (isMobile ? [0.9, 0.9, 0.9] : [1, 1, 1]), [isMobile]);
-    const planeScale = useMemo(() => (isMobile ? [1.5, 1.5, 1.5] : [3, 3, 3]), [isMobile]);
-    const planePosition = useMemo(() => (isMobile ? [0, -1.5, 0] : [0, -4, -4]), [isMobile]);
+
+    const planeScale = useMemo(() => {
+        const p = 1.5 + 1.5 * t;
+        return [p, p, p];
+    }, [t]);
+    const planePosition = useMemo(() => [0, -1.5 - 2.5 * t, -4 * t], [t]);
     const planeRotation = useMemo(() => [0, 2, 0], []);
 
     return (
-        <section className="w-full h-screen relative">
+        <section className="w-full h-screen-safe overflow-hidden relative">
             {<div className="absolute top-28 left-0 right-0 z-10 flex items-center justify-center">
                 {currentStage && <HomeInfo currentStage={currentStage} />}
             </div>}

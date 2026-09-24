@@ -616,3 +616,12 @@ body:has(.card[data-color="green"]:hover) {
   background: #1e293b;
   color: #60a5fa;
 }
+
+/* 100vh on a phone measures the viewport with the browser's URL bar hidden, so
+   a full-height section ends up taller than what is actually on screen and the
+   page scrolls by the height of that bar. dvh tracks the real visible height;
+   the vh line stays first as the fallback for browsers without it. */
+.h-screen-safe {
+  height: 100vh;
+  height: 100dvh;
+}
