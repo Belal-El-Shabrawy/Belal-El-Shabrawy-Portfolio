@@ -72,10 +72,51 @@ export const skills = [
         imageUrl: "/icons/html.svg",
         name: "HTML",
         type: "Frontend",
+    },
+    {
+        imageUrl: "/icons/php.svg",
+        name: "PHP",
+        type: "Backend",
+    },
+    {
+        imageUrl: "/icons/wordpress.svg",
+        name: "WordPress",
+        type: "Backend",
+    },
+    {
+        imageUrl: "/icons/java.svg",
+        name: "Java",
+        type: "Backend",
     }
 ];
 
 export const experiences = [
+    {
+        title: "Software Engineer (Full-time)",
+        company_name: "Clinica Joelle",
+        icon: "/icons/clinic.svg",
+        iconBg: "#e6d3a3",
+        date: "2026 - Present",
+        points: [
+            "Built two custom WordPress themes from scratch for a live aesthetic-medicine clinic, using PHP templates and template parts, block patterns, theme.json design tokens and self-hosted fonts rather than a page builder.",
+            "Implemented treatment pages, doctor profiles, before-and-after result galleries and a consultation enquiry flow.",
+            "Own and extend the production site at clinicajoelleegypt.com day to day, from new treatment pages to performance and front-end fixes.",
+        ],
+    },
+    {
+        title: "Software Engineer (Part-time)",
+        company_name: "CSDS - Cairo University",
+        icon: "/icons/cms.svg",
+        iconBg: "#ffd8a8",
+        date: "2026 - Present",
+        points: [
+            "Built and shipped the university's Q&A CMS in Next.js 16 and TypeScript, now used by 27 faculties to author the content behind the university's AI assistant.",
+            "Designed the authentication chain end to end: bcrypt-hashed PIN login, signed session cookies exchanged for scoped Firebase custom tokens, with Firestore security rules as the enforced boundary.",
+            "Added fail-closed rate limiting on Upstash Redis, so a degraded Redis blocks logins instead of silently disabling the brute-force guard.",
+            "Helped build the Arabic RAG pipeline behind the assistant - LangChain over per-faculty ChromaDB vector stores, multilingual MPNet embeddings, Arabic normalisation and a reranking stage - and acted as the model's tester, checking retrieval quality and answer grounding across all 27 faculty knowledge bases.",
+            "Delivered the entire interface in Arabic, right to left, and worked with a team on the student-facing Java JSP chat portal that ingests the CMS exports.",
+        ],
+    },
     {
         title: "AI Expert",
         company_name: "Scale AI",
@@ -132,6 +173,24 @@ export const socialLinks = [
 ];
 
 export const projects = [
+    {
+        imageUrl: "/projects/UniversityCMS.png",
+        name: 'University Q&A CMS',
+        description: "A production Next.js 16 and TypeScript CMS that 27 Cairo University faculties use to author the Q&A behind the university's AI assistant. Each faculty logs in with its own bcrypt-hashed PIN; the signed session cookie is exchanged for a scoped Firebase custom token, and Firestore security rules enforce that a faculty can only ever write into its own line. Rate limiting runs on Upstash Redis, and the whole interface is Arabic, right to left.",
+        link: 'https://university-form-chatbox.vercel.app/login',
+    },
+    {
+        imageUrl: "/projects/UniAssistant.png",
+        name: 'Cairo University AI Assistant',
+        description: "The student-facing half of the same pipeline: an Arabic RTL chat portal for postgraduate enquiries, served by Java JSP and Servlets on the university's own machines and proxied to a Python retrieval service. I helped build its Arabic RAG pipeline - LangChain over per-faculty ChromaDB stores, multilingual MPNet embeddings, Arabic text normalisation and a reranking stage - and was the tester for the model, checking answer grounding across 27 faculty knowledge bases built from regulations, course specifications and FAQs.",
+        link: 'http://193.227.14.14:8080/uni_chatbox/',
+    },
+    {
+        imageUrl: "/projects/ClinicaJoelle.png",
+        name: 'Clinica Joelle',
+        description: 'A live aesthetic-medicine clinic site, built as two custom WordPress themes from scratch rather than a page builder: PHP templates and template parts, block patterns, theme.json design tokens and self-hosted fonts. Covers treatment pages, doctor profiles, before-and-after galleries and a consultation enquiry flow.',
+        link: 'https://clinicajoelleegypt.com/',
+    },
     {
         imageUrl: "/projects/PortfolioGenie.png",
         name: 'PortfolioGenie',

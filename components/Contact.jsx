@@ -32,7 +32,7 @@ const Contact = () => {
                 from_name: form.name,
                 to_name: "Belal",
                 from_email: form.email,
-                to_email: 'engbelalalaa@gmail.com',
+                to_email: 'eng.belalalaa@gmail.com',
                 message: form.message,
             },
             process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY 
@@ -43,7 +43,7 @@ const Contact = () => {
                 hideAlert();
                 setCurrentAnimation("idle");
                 setform({name:"",email:"",message:""});
-            }, [3000]);
+            }, 3000);
         }, (error) => {
             setIsLoading(false);
             setCurrentAnimation("idle");

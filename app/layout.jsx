@@ -19,6 +19,44 @@ const workSans = Work_Sans({
   display: 'swap',
 });
 
+// Without this the site shipped no <title> and no description at all, so every
+// route showed the bare URL in search results and in link previews.
+export const metadata = {
+  metadataBase: new URL('https://belal-elshabrawy-portfolio.vercel.app'),
+  title: {
+    default: "Belal El-Shabrawy - Full-Stack Developer",
+    template: "%s | Belal El-Shabrawy",
+  },
+  description:
+    "Full-stack developer and Computer Science & AI student at Cairo University. I build production web apps with Next.js, TypeScript, Firebase and Node.js.",
+  keywords: [
+    "Belal El-Shabrawy",
+    "full-stack developer",
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Firebase",
+    "Egypt",
+  ],
+  authors: [{ name: "Belal El-Shabrawy" }],
+  creator: "Belal El-Shabrawy",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://belal-elshabrawy-portfolio.vercel.app",
+    siteName: "Belal El-Shabrawy",
+    title: "Belal El-Shabrawy - Full-Stack Developer",
+    description:
+      "Full-stack developer and Computer Science & AI student at Cairo University. I build production web apps with Next.js, TypeScript, Firebase and Node.js.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Belal El-Shabrawy - Full-Stack Developer",
+    description:
+      "Full-stack developer and CS & AI student at Cairo University, building production web apps.",
+  },
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${poppins.variable} ${workSans.variable}`}>

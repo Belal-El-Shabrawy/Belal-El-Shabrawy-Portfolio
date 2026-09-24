@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 
 const InfoBox = ({ text, link, btnText, gradient }) => {
@@ -11,7 +12,7 @@ const InfoBox = ({ text, link, btnText, gradient }) => {
                 className="bg-white text-black flex justify-center items-center gap-3 w-max mx-auto px-6 py-2.5 rounded-lg border-2 border-black hover:bg-black hover:text-white transition-colors font-bold"
             >
                 {btnText}
-                <img src="/icons/arrow.svg" className="w-4 h-4 object-contain invert hover:invert-0 transition-all" alt="arrow" />
+                <Image src="/icons/arrow.svg" width={16} height={16} className="w-4 h-4 object-contain invert hover:invert-0 transition-all" alt="arrow" />
             </Link>
         </div>
     );
@@ -21,7 +22,7 @@ const renderContent = {
     // Grade 1: Light & welcoming (Sky to Blue)
     1: (
         <h1 className="sm:text-xl sm:leading-snug text-center bg-gradient-to-br from-sky-400 to-blue-500 py-4 px-8 text-white mx-5 rounded-xl transition-transform hover:-translate-y-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-4 border-black">
-            Hi, I'm <span className="font-semibold">Belal El-Shabrawy 👋</span><br/>
+            Hi, I&apos;m <span className="font-semibold">Belal El-Shabrawy 👋</span><br/>
             A Full-Stack Developer From Egypt.
         </h1>
     ),

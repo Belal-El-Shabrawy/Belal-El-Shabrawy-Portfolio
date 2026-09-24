@@ -1,9 +1,11 @@
-'use client';
+import ContactClient from '@/components/ContactClient';
 
-import dynamic from 'next/dynamic';
-
-const Contact = dynamic(() => import('@/components/Contact'), { ssr: false });
+export const metadata = {
+  title: 'Contact',
+  description:
+    'Get in touch with Belal El-Shabrawy about software engineering roles, freelance work or collaboration.',
+};
 
 export default function ContactPage() {
-  return <Contact />;
+  return <ContactClient />;
 }

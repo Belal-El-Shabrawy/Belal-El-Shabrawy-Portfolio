@@ -1,9 +1,10 @@
-'use client';
+import HomeClient from '@/components/HomeClient';
 
-import dynamic from 'next/dynamic';
-
-const Home = dynamic(() => import('@/components/Home'), { ssr: false });
+export const metadata = {
+  description:
+    "Full-stack developer and Computer Science & AI student at Cairo University. Software Engineer at Clinica Joelle and CSDS, building production web apps with Next.js, TypeScript and Firebase.",
+};
 
 export default function HomePage() {
-  return <Home />;
+  return <HomeClient />;
 }

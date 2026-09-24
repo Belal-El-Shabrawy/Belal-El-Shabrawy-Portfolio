@@ -2,7 +2,7 @@
 
 import {Canvas} from "@react-three/fiber";
 import {useGLTF} from "@react-three/drei";
-import {useState, Suspense, useEffect} from "react";
+import {useState, Suspense, useEffect, useMemo} from "react";
 import Loader from "./Loader";
 import Island from "./models/Island";
 import Sky from "./models/Sky";
@@ -21,42 +21,25 @@ const Home = () => {
     const [hasInteracted, setHasInteracted] = useState(false);
     const [pointerDirection, setPointerDirection] = useState(0);
 
-    const adjustIslandForScreenSize = () => {
-        let screenScale, screenPosition;
-        screenPosition = [0, -6.5, -43];
-        let rotation = [0.1, 4.7, 0];
-        
-        if (window.innerWidth < 768) {
-            screenScale = [0.9, 0.9, 0.9];
-        } else {
-            screenScale = [1, 1, 1];
-        }
-        return {screenScale, screenPosition, rotation};
-    };
+    const [isMobile, setIsMobile] = useState(false);
 
-    const {
-        screenScale: islandScale, 
-        screenPosition: islandPosition, 
-        rotation: islandRotation
-    } = adjustIslandForScreenSize();
-      
-    const adjustPlaneForScreenSize = () => {
-        let screenScale, screenPosition;
-        
-        if (window.innerWidth < 768) {
-            screenScale = [1.5, 1.5, 1.5];
-            screenPosition = [0, -1.5, 0];
-        } else {
-            screenScale = [3, 3, 3];
-            screenPosition = [0, -4, -4];
-        }
-        return {screenScale, screenPosition};
-    };
+    useEffect(() => {
+        // Sizes used to be read straight off window.innerWidth during render,
+        // so the scene never reacted to a resize or a phone rotating.
+        const query = window.matchMedia("(max-width: 767px)");
+        const sync = (e) => setIsMobile(e.matches);
+        sync(query);
+        query.addEventListener("change", sync);
+        return () => query.removeEventListener("change", sync);
+    }, []);
 
-    const {
-        screenScale: planeScale, 
-        screenPosition: planePosition
-    } = adjustPlaneForScreenSize();
+    // Memoised so Island and Plane don't get fresh array props every render.
+    const islandPosition = useMemo(() => [0, -6.5, -43], []);
+    const islandRotation = useMemo(() => [0.1, 4.7, 0], []);
+    const islandScale = useMemo(() => (isMobile ? [0.9, 0.9, 0.9] : [1, 1, 1]), [isMobile]);
+    const planeScale = useMemo(() => (isMobile ? [1.5, 1.5, 1.5] : [3, 3, 3]), [isMobile]);
+    const planePosition = useMemo(() => (isMobile ? [0, -1.5, 0] : [0, -4, -4]), [isMobile]);
+    const planeRotation = useMemo(() => [0, 2, 0], []);
 
     return (
         <section className="w-full h-screen relative">
@@ -104,7 +87,7 @@ const Home = () => {
                         position={planePosition} 
                         scale={planeScale} 
                         isRotating={isRotating}
-                        rotation={[0, 2, 0]} 
+                        rotation={planeRotation} 
                         planeDirection={planeDirection} 
                     />
                 </Suspense>

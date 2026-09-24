@@ -2,11 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useGLTF } from "@react-three/drei";
 
 const NavBar = () => {
     const pathname = usePathname();
-    const prefetchFox = () => useGLTF.preload("/3d/fox.glb");
+    // Lazy on purpose: NavBar renders in the root layout, so a static drei
+    // import would pull three.js into every page's first-load bundle and
+    // undo the ssr:false split on the 3D routes.
+    const prefetchFox = () => {
+        import("@react-three/drei").then(({ useGLTF }) => useGLTF.preload("/3d/fox.glb"));
+    };
 
     return (
         <header className="header">

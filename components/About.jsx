@@ -27,7 +27,7 @@ const About = () => {
                 </div>
                 <div className="flex flex-col gap-4">
                     <h1 className="head-text">
-                        Hi, I'm <span className="blue-gradient_text
+                        Hi, I&apos;m <span className="blue-gradient_text
                         font-semibold drop-shadow">Belal</span> <br />
                     </h1>
                     <div className="flex gap-4">
@@ -54,7 +54,7 @@ const About = () => {
                 </div>
             </div>
             <div className="mt-5 flex flex-col gap-3 text-slate-500">
-                <p> I'm a full-stack developer and Computer Science & Artificial
+                <p> I&apos;m a full-stack developer and Computer Science & Artificial
                     Intelligence student at Cairo University, based in Giza, Egypt.
                     I enjoy working across the whole stack, from building responsive,
                     intuitive interfaces to wiring up backends, databases, and AI-powered
@@ -66,10 +66,14 @@ const About = () => {
                     {skills.map((skill) => (
                         <div className="block-container w-20 h-20" key={skill.name}>
                             <div className="btn-back rounded-xl"/>
-                            <div className="btn-front rounded-xl flex justify-center items-center">
-                            <img src={skill.imageUrl} alt={skill.name}
-                            className="w-1/2 h-1/2 object-contain"/>
-                            <p className="text-slate-500 text-sm">{skill.name}</p>
+                            {/* Icon over label, not beside it: the card is 80px wide with
+                                overflow:hidden, so a side-by-side label was clipped
+                                ("Firebas", "GitHut", "TypeScri"). */}
+                            <div className="btn-front rounded-xl flex flex-col justify-center items-center gap-0.5 px-1">
+                            <Image src={skill.imageUrl} alt={skill.name}
+                            width={32} height={32}
+                            className="w-2/5 h-2/5 object-contain"/>
+                            <p className="text-slate-500 text-[9px] leading-tight text-center">{skill.name}</p>
                             </div>
                         </div>
                     ))}
@@ -78,7 +82,7 @@ const About = () => {
             <div className="py-16">
                 <h3 className="subhead-text">My Experience</h3>
                 <div className="mt-5 flex flex-col gap-3 text-slate-500">
-                    <p> Here's a look at my hands-on experience, from evaluating and
+                    <p> Here&apos;s a look at my hands-on experience, from evaluating and
                         refining AI model outputs to building and shipping full-stack
                         applications end to end.
                     </p>
@@ -91,11 +95,11 @@ const About = () => {
                             date={experience.date} 
                             icon={<div className="flex justify-center
                             items-center w-full h-full">
-                                <img src={experience.icon}
+                                <Image src={experience.icon}
                                  alt={experience.company_name}
+                                 width={40} height={40}
                                  className="w-[60%] h-[60%] object-contain"
-                                >
-                                </img>
+                                />
                             </div>}
                             iconStyle={{background: experience.iconBg}}
                             contentStyle={{

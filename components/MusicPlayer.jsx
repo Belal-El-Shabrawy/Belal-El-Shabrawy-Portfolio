@@ -7,7 +7,7 @@ const MusicPlayer = () => {
   const audioRef = useRef(null);
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
-  const [showWaves, setShowWaves] = useState(false);
+  const [showWaves, setShowWaves] = useState(true);
 
   useEffect(() => {
     // Audio must be created client-side only (new Audio() needs window)
@@ -19,14 +19,18 @@ const MusicPlayer = () => {
   // Ripple runs once on initial page load only — ~5 pulses (animate-ping's
   // cycle is 1s), then it's gone for good, regardless of later play/pause clicks.
   useEffect(() => {
-    setShowWaves(true);
+    // Starts true so the first paint already shows the ripple; this effect
+    // only has to switch it off, with no setState during the effect body.
     const timer = setTimeout(() => setShowWaves(false), 5000);
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     if (isPlayingMusic && audioRef.current) {
-      audioRef.current.play();
+      // play() rejects when the browser blocks playback; without this the
+      // button would read "on" while nothing plays, and the rejection would
+      // surface as an unhandled promise error.
+      audioRef.current.play().catch(() => setIsPlayingMusic(false));
     } else if (audioRef.current) {
       audioRef.current.pause();
     }
