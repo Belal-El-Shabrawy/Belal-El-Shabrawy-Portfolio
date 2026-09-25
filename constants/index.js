@@ -142,18 +142,6 @@ export const experiences = [
             "Applied prompt-engineering techniques to integrate AI-generated content into a real product workflow.",
         ],
     },
-    {
-        title: "Full-Stack Developer",
-        company_name: "Independent Projects",
-        icon: "/icons/github.svg",
-        iconBg: "#b7e4c7",
-        date: "2026 - Present",
-        points: [
-            "Built and deployed a Hospital WhatsApp Bot (Node.js/Express) integrating the Groq AI API and AWS Textract to parse prescriptions and insurance cards.",
-            "Developed a real-time social media app using React, TypeScript, and Firebase (Firestore & Authentication).",
-            "Collaborated on a full-stack movie viewer app with PHP/Laravel, integrating external REST APIs and handling XSS-safe data sanitization.",
-        ],
-    },
 ];
 
 export const socialLinks = [
