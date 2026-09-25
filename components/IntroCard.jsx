@@ -12,7 +12,7 @@ const IntroCard = ({ as: Heading = 'h1' }) => {
     return (
         <div className="pointer-events-auto w-full max-w-xl rounded-2xl border-2 sm:border-4 border-black bg-white/90 dark:bg-slate-900/85 backdrop-blur-md px-5 py-4 sm:px-8 sm:py-6 text-center shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
             <Heading className="font-poppins text-xl sm:text-3xl font-semibold text-black dark:text-white">
-                Belal El-Shabrawy
+                Belal Alaa El-Shabrawy
             </Heading>
 
             <p className="mt-1 text-sm sm:text-base font-medium blue-gradient_text">

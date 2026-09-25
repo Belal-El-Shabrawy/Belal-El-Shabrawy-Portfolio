@@ -24,12 +24,13 @@ const workSans = Work_Sans({
 export const metadata = {
   metadataBase: new URL('https://www.belalalaa.com'),
   title: {
-    default: "Belal El-Shabrawy - Full-Stack Developer",
-    template: "%s | Belal El-Shabrawy",
+    default: "Belal Alaa El-Shabrawy - Full-Stack Developer",
+    template: "%s | Belal Alaa El-Shabrawy",
   },
   description:
     "Full-stack developer and Computer Science & AI student at Cairo University. I build production web apps with Next.js, TypeScript, Firebase and Node.js.",
   keywords: [
+    "Belal Alaa El-Shabrawy",
     "Belal El-Shabrawy",
     "Belal Alaa",
     "belalalaa",
@@ -40,20 +41,20 @@ export const metadata = {
     "Firebase",
     "Egypt",
   ],
-  authors: [{ name: "Belal El-Shabrawy" }],
-  creator: "Belal El-Shabrawy",
+  authors: [{ name: "Belal Alaa El-Shabrawy" }],
+  creator: "Belal Alaa El-Shabrawy",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://www.belalalaa.com",
-    siteName: "Belal El-Shabrawy",
-    title: "Belal El-Shabrawy - Full-Stack Developer",
+    siteName: "Belal Alaa El-Shabrawy",
+    title: "Belal Alaa El-Shabrawy - Full-Stack Developer",
     description:
       "Full-stack developer and Computer Science & AI student at Cairo University. I build production web apps with Next.js, TypeScript, Firebase and Node.js.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Belal El-Shabrawy - Full-Stack Developer",
+    title: "Belal Alaa El-Shabrawy - Full-Stack Developer",
     description:
       "Full-stack developer and CS & AI student at Cairo University, building production web apps.",
   },
@@ -71,22 +72,23 @@ const identityJsonLd = {
     {
       '@type': 'Person',
       '@id': personId,
-      name: 'Belal El-Shabrawy',
+      name: 'Belal Alaa El-Shabrawy',
       givenName: 'Belal',
+      additionalName: 'Alaa',
       familyName: 'El-Shabrawy',
-      alternateName: ['Belal Alaa', 'Belal Alaa El-Shabrawy', 'belalalaa', 'بلال الشبراوي', 'بلال علاء'],
+      alternateName: ['Belal El-Shabrawy', 'Belal Alaa', 'belalalaa', 'بلال علاء الشبراوي', 'بلال الشبراوي', 'بلال علاء'],
       url: siteUrl,
       image: {
         '@type': 'ImageObject',
         '@id': `${siteUrl}/#portrait`,
         url: `${siteUrl}/images/belal-portrait.jpeg`,
-        caption: 'Belal El-Shabrawy',
+        caption: 'Belal Alaa El-Shabrawy',
       },
       jobTitle: 'Full-Stack Developer',
       description:
         'Full-stack developer and Computer Science & AI student at Cairo University, building production web apps with Next.js, TypeScript, Firebase and Node.js.',
       nationality: { '@type': 'Country', name: 'Egypt' },
-      address: { '@type': 'PostalAddress', addressLocality: 'Cairo', addressCountry: 'EG' },
+      address: { '@type': 'PostalAddress', addressLocality: 'Giza', addressCountry: 'EG' },
       affiliation: {
         '@type': 'CollegeOrUniversity',
         name: 'Cairo University',
@@ -123,7 +125,7 @@ const identityJsonLd = {
       '@type': 'WebSite',
       '@id': `${siteUrl}/#website`,
       url: siteUrl,
-      name: 'Belal El-Shabrawy',
+      name: 'Belal Alaa El-Shabrawy',
       alternateName: 'belalalaa.com',
       inLanguage: 'en',
       publisher: { '@id': personId },
@@ -133,7 +135,7 @@ const identityJsonLd = {
       '@type': 'ProfilePage',
       '@id': `${siteUrl}/#profilepage`,
       url: siteUrl,
-      name: 'Belal El-Shabrawy - Full-Stack Developer',
+      name: 'Belal Alaa El-Shabrawy - Full-Stack Developer',
       isPartOf: { '@id': `${siteUrl}/#website` },
       mainEntity: { '@id': personId },
       primaryImageOfPage: { '@id': `${siteUrl}/#portrait` },

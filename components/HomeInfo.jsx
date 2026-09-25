@@ -29,7 +29,7 @@ const renderContent = {
     2: (
         <InfoBox
             gradient="bg-gradient-to-br from-blue-500 to-indigo-500"
-            text="I build with Next, React, TypeScript, Node.js, and Firebase, and I've shipped multiple full-stack apps, including a live AI-integrated WhatsApp bot."
+            text="I build with Next.js, React, TypeScript, Node.js and Firebase. My CMS is used every day by 27 Cairo University faculties."
             link="/about"
             btnText="Learn More"
         />
@@ -38,7 +38,7 @@ const renderContent = {
     3: (
         <InfoBox
             gradient="bg-gradient-to-br from-indigo-500 to-violet-600"
-            text="A Computer Science & AI student who loves building end-to-end, from responsive UIs to backends and AI-powered integrations."
+            text="From an Arabic RAG assistant to a live clinic website, I take products end to end: interface, backend, auth and AI."
             link="/projects"
             btnText="View My Work"
         />
@@ -47,7 +47,7 @@ const renderContent = {
     4: (
         <InfoBox
             gradient="bg-gradient-to-br from-blue-600 to-slate-900"
-            text="I'm currently open to new opportunities as a Software Engineer. Let's connect and talk about how I can contribute to your team."
+            text="I'm open to Software Engineer roles. Let's connect and talk about how I can contribute to your team."
             link="/contact"
             btnText="Get In Touch"
         />

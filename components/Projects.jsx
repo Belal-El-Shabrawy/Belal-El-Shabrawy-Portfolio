@@ -11,10 +11,11 @@ const Projects = () => {
                 font-semibold drop-shadow">Projects</span> <br />
             </h1>
             <div className="mt-5 flex flex-col gap-3 text-slate-500 dark:text-slate-400">
-                <p>A few things I&apos;ve built and shipped - from an AI-integrated
-                WhatsApp bot handling real patient bookings, to a real-time
-                social app with type-safe state management. Each one taught
-                me something different about taking a product from idea to
+                <p>Things I&apos;ve built and shipped - from the CMS and Arabic AI
+                assistant used across Cairo University&apos;s 27 faculties, to a
+                live clinic website built from scratch, to earlier full-stack
+                apps like an AI-integrated WhatsApp bot. Each one taught me
+                something different about taking a product from idea to
                 production.</p>
             </div>
             <div className="my-20 flex flex-wrap gap-16">

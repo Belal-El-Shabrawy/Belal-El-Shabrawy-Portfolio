@@ -4,7 +4,7 @@ export const metadata = {
   alternates: { canonical: '/contact' },
   title: 'Contact',
   description:
-    'Get in touch with Belal El-Shabrawy about software engineering roles, freelance work or collaboration.',
+    'Get in touch with Belal Alaa El-Shabrawy about software engineering roles, freelance work or collaboration.',
 };
 
 export default function ContactPage() {

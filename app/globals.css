@@ -633,6 +633,13 @@ body {
   pointer-events: none;
 }
 
+/* The card inside sets pointer-events-auto, which beats the inherited `none`
+   above. Left alone, the invisible card sits on top of HomeInfo's cards (same
+   z-10, later in the DOM) and swallows every click on their buttons. */
+[data-exploring="true"] .home-hero * {
+  pointer-events: none;
+}
+
 /* Anchor jump from the scene down to the featured strip. */
 html {
   scroll-behavior: smooth;

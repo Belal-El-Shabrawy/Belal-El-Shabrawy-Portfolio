@@ -44,7 +44,7 @@ const About = () => {
                     <div className="w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-slate-700 bg-white dark:bg-slate-800">
                         <Image
                             src="/images/belal-portrait.jpeg"
-                            alt="Belal El-Shabrawy"
+                            alt="Belal Alaa El-Shabrawy"
                             width={384}
                             height={384}
                             /* portrait crop: the face sits below centre, so bias
@@ -57,7 +57,7 @@ const About = () => {
                 <div className="flex w-full flex-col items-center gap-4 text-center sm:w-auto sm:items-start sm:text-left">
                     <h1 className="head-text">
                         Hi, I&apos;m <span className="blue-gradient_text
-                        font-semibold drop-shadow">Belal</span> <br />
+                        font-semibold drop-shadow">Belal Alaa <span className="whitespace-nowrap">El-Shabrawy</span></span> <br />
                     </h1>
                     <div className="flex flex-wrap justify-center gap-3 sm:justify-start sm:gap-4">
                         {aboutSocials.map((social) => (
@@ -85,7 +85,10 @@ const About = () => {
             <div className="mt-5 flex flex-col gap-3 text-slate-500 dark:text-slate-400">
                 <p> I&apos;m a full-stack developer and Computer Science & Artificial
                     Intelligence student at Cairo University, based in Giza, Egypt.
-                    I enjoy working across the whole stack, from building responsive,
+                    I work as a Software Engineer at Clinica Joelle and at CSDS -
+                    Cairo University, where I built the CMS that 27 faculties use to
+                    run the university&apos;s AI assistant.</p>
+                <p> I enjoy working across the whole stack, from building responsive,
                     intuitive interfaces to wiring up backends, databases, and AI-powered
                     integrations.</p>
             </div>
@@ -111,9 +114,9 @@ const About = () => {
             <div className="py-16">
                 <h3 className="subhead-text">My Experience</h3>
                 <div className="mt-5 flex flex-col gap-3 text-slate-500 dark:text-slate-400">
-                    <p> Here&apos;s a look at my hands-on experience, from evaluating and
-                        refining AI model outputs to building and shipping full-stack
-                        applications end to end.
+                    <p> Here&apos;s a look at my experience - two current engineering roles
+                        shipping production software, plus the AI evaluation work and
+                        training that came before them.
                     </p>
                 </div>
             </div>
