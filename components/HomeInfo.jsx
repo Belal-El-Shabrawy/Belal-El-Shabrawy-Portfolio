@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import IntroCard from './IntroCard';
 
 const InfoBox = ({ text, link, btnText, gradient }) => {
     return (
@@ -19,18 +20,11 @@ const InfoBox = ({ text, link, btnText, gradient }) => {
 }
 
 const renderContent = {
-    // Grade 1: Light & welcoming (Sky to Blue). This used to be the "Hi, I'm
-    // Belal" card, which the static hero on the page now says before anyone
-    // touches the island - so this slot carries the current roles instead of
-    // repeating the introduction.
-    1: (
-        <InfoBox
-            gradient="bg-gradient-to-br from-sky-400 to-blue-500"
-            text="Right now I'm a Software Engineer at Clinica Joelle full-time, and at CSDS, Cairo University part-time - shipping on both at once."
-            link="/about"
-            btnText="See My Experience"
-        />
-    ),
+    // Grade 1 is the same introduction the static hero shows before anyone
+    // touches the island - same component, so rotating back here lands on
+    // exactly what they first saw rather than a different blue card.
+    1: <IntroCard as="p" />,
+
     // Grade 2: Solid & professional (Blue to Indigo)
     2: (
         <InfoBox
