@@ -31,6 +31,8 @@ export const metadata = {
     "Full-stack developer and Computer Science & AI student at Cairo University. I build production web apps with Next.js, TypeScript, Firebase and Node.js.",
   keywords: [
     "Belal El-Shabrawy",
+    "Belal Alaa",
+    "belalalaa",
     "full-stack developer",
     "Next.js",
     "React",
@@ -57,6 +59,88 @@ export const metadata = {
   },
 };
 
+// Structured data (schema.org) describing who the site belongs to. The @id
+// values tie the nodes together, so Google reads the site, the profile page and
+// the GitHub/LinkedIn profiles as one person - what a name search matches on.
+const siteUrl = 'https://belalalaa.com';
+const personId = `${siteUrl}/#person`;
+
+const identityJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': personId,
+      name: 'Belal El-Shabrawy',
+      givenName: 'Belal',
+      familyName: 'El-Shabrawy',
+      alternateName: ['Belal Alaa', 'Belal Alaa El-Shabrawy', 'belalalaa', 'بلال الشبراوي', 'بلال علاء'],
+      url: siteUrl,
+      image: {
+        '@type': 'ImageObject',
+        '@id': `${siteUrl}/#portrait`,
+        url: `${siteUrl}/images/belal-portrait.jpeg`,
+        caption: 'Belal El-Shabrawy',
+      },
+      jobTitle: 'Full-Stack Developer',
+      description:
+        'Full-stack developer and Computer Science & AI student at Cairo University, building production web apps with Next.js, TypeScript, Firebase and Node.js.',
+      nationality: { '@type': 'Country', name: 'Egypt' },
+      address: { '@type': 'PostalAddress', addressLocality: 'Cairo', addressCountry: 'EG' },
+      affiliation: {
+        '@type': 'CollegeOrUniversity',
+        name: 'Cairo University',
+        sameAs: 'https://cu.edu.eg',
+      },
+      worksFor: [
+        { '@type': 'Organization', name: 'Clinica Joelle', url: 'https://clinicajoelleegypt.com' },
+        { '@type': 'Organization', name: 'CSDS - Cairo University' },
+      ],
+      hasOccupation: {
+        '@type': 'Occupation',
+        name: 'Software Engineer',
+        occupationLocation: { '@type': 'Country', name: 'Egypt' },
+        skills: 'Next.js, React, TypeScript, JavaScript, Node.js, Express, Firebase, Three.js, Tailwind CSS, PHP, WordPress, Java',
+      },
+      knowsAbout: [
+        'Full-stack web development',
+        'Next.js',
+        'React',
+        'TypeScript',
+        'Node.js',
+        'Firebase',
+        'Three.js',
+        'WordPress',
+        'Retrieval-augmented generation (RAG)',
+      ],
+      knowsLanguage: ['ar', 'en'],
+      sameAs: [
+        'https://github.com/Belal-El-Shabrawy',
+        'https://www.linkedin.com/in/belal-el-shabrawy-26b406291/',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}/#website`,
+      url: siteUrl,
+      name: 'Belal El-Shabrawy',
+      alternateName: 'belalalaa.com',
+      inLanguage: 'en',
+      publisher: { '@id': personId },
+      author: { '@id': personId },
+    },
+    {
+      '@type': 'ProfilePage',
+      '@id': `${siteUrl}/#profilepage`,
+      url: siteUrl,
+      name: 'Belal El-Shabrawy - Full-Stack Developer',
+      isPartOf: { '@id': `${siteUrl}/#website` },
+      mainEntity: { '@id': personId },
+      primaryImageOfPage: { '@id': `${siteUrl}/#portrait` },
+    },
+  ],
+};
+
 export default function RootLayout({ children }) {
   return (
     <html
@@ -73,6 +157,10 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark');}catch(e){}})();`,
           }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(identityJsonLd) }}
         />
       </head>
       <body className="bg-white text-black transition-colors dark:bg-slate-900 dark:text-slate-100">

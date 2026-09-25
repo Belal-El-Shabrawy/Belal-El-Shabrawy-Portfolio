@@ -3,6 +3,7 @@ import HomeHero from '@/components/HomeHero';
 import FeaturedWork from '@/components/FeaturedWork';
 
 export const metadata = {
+  alternates: { canonical: '/' },
   description:
     "Full-stack developer and Computer Science & AI student at Cairo University. Software Engineer at Clinica Joelle and CSDS, building production web apps with Next.js, TypeScript and Firebase.",
 };
