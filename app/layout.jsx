@@ -22,7 +22,7 @@ const workSans = Work_Sans({
 // Without this the site shipped no <title> and no description at all, so every
 // route showed the bare URL in search results and in link previews.
 export const metadata = {
-  metadataBase: new URL('https://belalalaa.com'),
+  metadataBase: new URL('https://www.belalalaa.com'),
   title: {
     default: "Belal El-Shabrawy - Full-Stack Developer",
     template: "%s | Belal El-Shabrawy",
@@ -45,7 +45,7 @@ export const metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://belalalaa.com",
+    url: "https://www.belalalaa.com",
     siteName: "Belal El-Shabrawy",
     title: "Belal El-Shabrawy - Full-Stack Developer",
     description:
@@ -62,7 +62,7 @@ export const metadata = {
 // Structured data (schema.org) describing who the site belongs to. The @id
 // values tie the nodes together, so Google reads the site, the profile page and
 // the GitHub/LinkedIn profiles as one person - what a name search matches on.
-const siteUrl = 'https://belalalaa.com';
+const siteUrl = 'https://www.belalalaa.com';
 const personId = `${siteUrl}/#person`;
 
 const identityJsonLd = {

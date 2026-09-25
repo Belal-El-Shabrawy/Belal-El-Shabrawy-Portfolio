@@ -1,7 +1,7 @@
 export default function robots() {
   return {
     rules: { userAgent: '*', allow: '/' },
-    sitemap: 'https://belalalaa.com/sitemap.xml',
-    host: 'https://belalalaa.com',
+    sitemap: 'https://www.belalalaa.com/sitemap.xml',
+    host: 'https://www.belalalaa.com',
   };
 }

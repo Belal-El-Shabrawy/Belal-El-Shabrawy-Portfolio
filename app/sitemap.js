@@ -1,4 +1,4 @@
-const siteUrl = 'https://belalalaa.com';
+const siteUrl = 'https://www.belalalaa.com';
 
 export default function sitemap() {
   const lastModified = new Date();
