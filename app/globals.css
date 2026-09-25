@@ -18,14 +18,6 @@ body {
   font-family: var(--font-work-sans), sans-serif;
 }
 
-body:has(.card[data-color="blue"]:hover) {
-  background-color: rgb(var(--blue-rgb) / 25%);
-}
-
-body:has(.card[data-color="green"]:hover) {
-  background-color: rgb(var(--green-rgb) / 25%);
-}
-
 @layer utilities {
   .max-container {
     max-width: 64rem;
@@ -256,10 +248,20 @@ body:has(.card[data-color="green"]:hover) {
     0px 1.5px 4px -1px rgba(67, 83, 255, 0.2);
 }
 
+/* The skill cards tilt in 3D on hover. Everything that costs anything - the
+   perspective context, the promoted layers, the blur behind each card and the
+   wide shadow - is opt-in for pointer devices below, because none of it can be
+   seen at all without a hover. The grid is 16 cards, so it multiplies.
+
+   Written as opt-in rather than as a `(hover: none)` override on purpose: the
+   override version was defeated twice, and both failures only bit in dark mode
+   on a phone. The minifier dropped `backdrop-filter: none` as redundant beside
+   the prefixed one, so the unprefixed blur survived; and `.dark .block-container
+   .btn-back` sits later in this file with higher specificity, which put the
+   40px shadow straight back. Opting in cannot fail either way. */
 .block-container {
   position: relative;
   transition: transform 250ms;
-  perspective: 500px;
 }
 
 .block-container .btn-back {
@@ -269,56 +271,54 @@ body:has(.card[data-color="green"]:hover) {
   width: inherit;
   height: inherit;
   transition: transform 250ms;
-  transform-style: preserve-3d;
   transform-origin: bottom right;
   transform: rotateZ(15deg);
-  will-change: transform;
-  box-shadow: 16px 0 40px #e4e4e4;
 }
 
+/* A real surface rather than a translucent one over a blur. The page behind
+   these cards is a flat background colour, so blurring it produced exactly the
+   same flat colour - the effect was invisible and only cost compositing work
+   on 16 elements. A solid fill and a hairline border give the card the edge it
+   was actually relying on the blur to imply. */
 .block-container .btn-front {
   position: absolute;
   inset: 0;
   z-index: 1;
   width: inherit;
   height: inherit;
-  background-color: #ffffff33;
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
   transition: transform 250ms;
-  transform-style: preserve-3d;
   transform-origin: top left;
   overflow: hidden;
 }
 
-/* Keyed to touch rather than to width: a phone held sideways is still a
-   phone. None of the :hover tilt below can ever fire here, so the 3D
-   context, the promoted layers and the blur behind every card are pure
-   cost — and the skills grid alone is 16 cards. */
-@media (hover: none), (pointer: coarse) {
+@media (hover: hover) and (pointer: fine) {
   .block-container {
-    perspective: none;
+    perspective: 500px;
   }
 
   .block-container .btn-back {
-    box-shadow: none;
-    will-change: auto;
-    transform-style: flat;
+    transform-style: preserve-3d;
+    will-change: transform;
+    box-shadow: 16px 0 40px #e4e4e4;
+  }
+
+  .dark .block-container .btn-back {
+    box-shadow: 16px 0 40px #020617;
   }
 
   .block-container .btn-front {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    transform-style: flat;
+    transform-style: preserve-3d;
   }
-}
 
-.block-container:hover > .btn-back {
-  transform: translateZ(20px) rotateZ(15deg) rotateX(-20deg) rotateY(-20deg);
-}
+  .block-container:hover > .btn-back {
+    transform: translateZ(20px) rotateZ(15deg) rotateX(-20deg) rotateY(-20deg);
+  }
 
-.block-container:hover > .btn-front {
-  transform: translateZ(80px) translateY(-5px) rotateX(15deg) rotateY(15deg);
+  .block-container:hover > .btn-front {
+    transform: translateZ(80px) translateY(-5px) rotateX(15deg) rotateY(15deg);
+  }
 }
 
 /* Neo Brutalism */
@@ -577,11 +577,8 @@ body:has(.card[data-color="green"]:hover) {
 
 /* -- skill / project cards -- */
 .dark .block-container .btn-front {
-  background-color: rgba(30, 41, 59, 0.6);
-}
-
-.dark .block-container .btn-back {
-  box-shadow: 16px 0 40px #020617;
+  background-color: #1e293b;
+  border-color: #334155;
 }
 
 /* -- contact form -- */
@@ -624,4 +621,28 @@ body:has(.card[data-color="green"]:hover) {
 .h-screen-safe {
   height: 100vh;
   height: 100dvh;
+}
+
+/* The hero is server-rendered above the canvas, outside the 3D scene's client
+   tree, so Home.jsx signals through a data attribute on <html> instead of a
+   prop. Once the visitor starts dragging the island, HomeInfo takes over that
+   same spot and the hero gets out of the way.
+   Unlayered on purpose: rules inside @layer lose to plain utilities. */
+[data-exploring="true"] .home-hero {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Anchor jump from the scene down to the featured strip. */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .home-hero {
+    transition: none;
+  }
 }

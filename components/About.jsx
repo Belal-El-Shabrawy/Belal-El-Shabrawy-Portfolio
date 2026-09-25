@@ -54,12 +54,12 @@ const About = () => {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col gap-4">
+                <div className="flex w-full flex-col items-center gap-4 text-center sm:w-auto sm:items-start sm:text-left">
                     <h1 className="head-text">
                         Hi, I&apos;m <span className="blue-gradient_text
                         font-semibold drop-shadow">Belal</span> <br />
                     </h1>
-                    <div className="flex gap-4">
+                    <div className="flex flex-wrap justify-center gap-3 sm:justify-start sm:gap-4">
                         {aboutSocials.map((social) => (
                             <a
                                 key={social.name}
@@ -69,7 +69,7 @@ const About = () => {
                                 className="flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-slate-800 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all border border-slate-100"
                             >
                                 <Image src={social.iconUrl} alt={social.name} width={20} height={20} className="w-5 h-5 object-contain" />
-                                <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{social.name}</span>
+                                <span className="whitespace-nowrap text-sm font-medium text-slate-700 dark:text-slate-200">{social.name}</span>
                             </a>
                         ))}
                         <a
@@ -77,7 +77,7 @@ const About = () => {
                             download
                             className="flex items-center gap-2 px-4 py-2 rounded-full bg-black dark:bg-blue-600 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all"
                         >
-                            <span className="text-sm font-medium text-white">Download CV</span>
+                            <span className="whitespace-nowrap text-sm font-medium text-white">Download CV</span>
                         </a>
                     </div>
                 </div>

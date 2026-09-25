@@ -2,7 +2,7 @@
 
 An interactive 3D developer portfolio built with Next.js, React Three Fiber, and Tailwind CSS.
 
-**Live site:** https://belal-elshabrawy-portfolio.vercel.app
+**Live site:** https://belalalaa.com
 
 ## Tech stack
 - Next.js 16 (App Router) · React 19

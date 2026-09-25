@@ -2,7 +2,7 @@
 
 import {Canvas} from "@react-three/fiber";
 import {useGLTF} from "@react-three/drei";
-import {useState, Suspense, useMemo} from "react";
+import {useState, Suspense, useMemo, useEffect} from "react";
 import Loader from "./Loader";
 import Island from "./models/Island";
 import Sky from "./models/Sky";
@@ -62,11 +62,20 @@ const Home = () => {
     const planePosition = useMemo(() => [0, -1.5 - 2.5 * t, -4 * t], [t]);
     const planeRotation = useMemo(() => [0, 2, 0], []);
 
+    // The hero is a Server Component sitting above this canvas, so it cannot be
+    // passed `hasInteracted`. CSS in globals.css fades it out off this flag.
+    useEffect(() => {
+        const root = document.documentElement;
+        root.dataset.exploring = hasInteracted ? "true" : "false";
+        return () => { delete root.dataset.exploring; };
+    }, [hasInteracted]);
+
     return (
-        <section className="w-full h-screen-safe overflow-hidden relative">
-            {/* HomeInfo positions itself; a second absolute wrapper here just
-                added its top offset on top of HomeInfo's own. */}
-            {currentStage && <HomeInfo currentStage={currentStage} />}
+        <div className="absolute inset-0">
+            {/* Only once they have started exploring: before that the static
+                hero in app/page.jsx occupies this spot, and stacking both would
+                put two cards on top of each other. */}
+            {hasInteracted && currentStage && <HomeInfo currentStage={currentStage} />}
             <Canvas 
                 className={`w-full h-full bg-transparent ${isRotating ? 'cursor-grabbing' : 'cursor-grab'}`} 
                 onPointerDown={(e) => {
@@ -131,7 +140,7 @@ const Home = () => {
                     </div>
                 </div>
             )}
-        </section>
+        </div>
     );
 }
 

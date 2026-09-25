@@ -22,7 +22,7 @@ const workSans = Work_Sans({
 // Without this the site shipped no <title> and no description at all, so every
 // route showed the bare URL in search results and in link previews.
 export const metadata = {
-  metadataBase: new URL('https://belal-elshabrawy-portfolio.vercel.app'),
+  metadataBase: new URL('https://belalalaa.com'),
   title: {
     default: "Belal El-Shabrawy - Full-Stack Developer",
     template: "%s | Belal El-Shabrawy",
@@ -43,7 +43,7 @@ export const metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://belal-elshabrawy-portfolio.vercel.app",
+    url: "https://belalalaa.com",
     siteName: "Belal El-Shabrawy",
     title: "Belal El-Shabrawy - Full-Stack Developer",
     description:
