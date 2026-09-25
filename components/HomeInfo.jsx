@@ -19,12 +19,17 @@ const InfoBox = ({ text, link, btnText, gradient }) => {
 }
 
 const renderContent = {
-    // Grade 1: Light & welcoming (Sky to Blue)
+    // Grade 1: Light & welcoming (Sky to Blue). This used to be the "Hi, I'm
+    // Belal" card, which the static hero on the page now says before anyone
+    // touches the island - so this slot carries the current roles instead of
+    // repeating the introduction.
     1: (
-        <h1 className="text-sm sm:text-xl sm:leading-snug text-center bg-gradient-to-br from-sky-400 to-blue-500 py-3 px-4 sm:py-4 sm:px-8 text-white mx-4 sm:mx-5 max-w-md sm:max-w-none rounded-xl transition-transform hover:-translate-y-1 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-2 sm:border-4 border-black">
-            Hi, I&apos;m <span className="font-semibold">Belal El-Shabrawy 👋</span><br/>
-            A Full-Stack Developer From Egypt.
-        </h1>
+        <InfoBox
+            gradient="bg-gradient-to-br from-sky-400 to-blue-500"
+            text="Right now I'm a Software Engineer at Clinica Joelle full-time, and at CSDS, Cairo University part-time - shipping on both at once."
+            link="/about"
+            btnText="See My Experience"
+        />
     ),
     // Grade 2: Solid & professional (Blue to Indigo)
     2: (

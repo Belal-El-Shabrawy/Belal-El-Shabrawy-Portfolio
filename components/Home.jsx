@@ -13,9 +13,14 @@ import HomeInfo from "./HomeInfo";
 import { useIsDark } from "../hooks/useIsDark";
 import { useViewport } from "../hooks/useViewport";
 
-// Warm the Contact page's fox model in the background while the user is
-// already on Home, so /contact doesn't stall on model download+parse later.
-useGLTF.preload("/3d/fox.glb");
+// Warm the Contact page's fox model while the user is already on Home, so
+// /contact doesn't stall on model download+parse later. Only worth doing where
+// bandwidth is cheap: on a phone it is 97 KB spent on a page they may never
+// open, competing with the models this page actually needs right now.
+if (typeof window !== "undefined" &&
+    window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    useGLTF.preload("/3d/fox.glb");
+}
 
 const Home = () => {
     const [isRotating, setIsRotating] = useState(false);
@@ -23,6 +28,15 @@ const Home = () => {
     const [planeDirection, setPlaneDirection] = useState(1);
     const [hasInteracted, setHasInteracted] = useState(false);
     const [pointerDirection, setPointerDirection] = useState(0);
+
+    // The island also turns with the arrow keys, which never reaches the
+    // pointer handler below. Both paths set isRotating, so deriving from it
+    // covers every way in - mouse, touch and keyboard. Adjusting state during
+    // render like this is the supported pattern; an effect would trip
+    // react-hooks/set-state-in-effect and cost an extra frame.
+    if (isRotating && !hasInteracted) {
+        setHasInteracted(true);
+    }
 
     const isDark = useIsDark();
     const { aspect } = useViewport();
@@ -80,7 +94,6 @@ const Home = () => {
                 className={`w-full h-full bg-transparent ${isRotating ? 'cursor-grabbing' : 'cursor-grab'}`} 
                 onPointerDown={(e) => {
                     setIsRotating(true);
-                    setHasInteracted(true);
                     const clientX = e.nativeEvent?.touches
                         ? e.nativeEvent.touches[0].clientX
                         : e.clientX;
@@ -105,6 +118,10 @@ const Home = () => {
                         intensity={isDark ? 0.45 : 1}
                     />
 
+                    {/* Kept, but rebuilt: 1,409 KB -> 437 KB. See the note in
+                        scratchpad/optimize_bird.py - the flap keyframes are
+                        untouched, the waste was constant channels, 264 copies
+                        of 2 timelines, and PNGs that had no transparency. */}
                     <Bird/>
                     {isDark ? <NightSky isRotating={isRotating}/> : <Sky isRotating={isRotating}/>}
                     
