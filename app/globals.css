@@ -129,7 +129,9 @@ body {
     top: 0;
     right: 0;
     left: 0;
-    z-index: 10;
+    /* Above the home hero and HomeInfo cards (both z-10, later in the DOM),
+       or the mobile menu opens underneath them. */
+    z-index: 30;
     display: flex;
     align-items: center;
     justify-content: space-between;
