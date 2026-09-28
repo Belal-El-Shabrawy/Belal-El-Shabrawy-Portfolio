@@ -166,7 +166,7 @@ const Theatre = ({ lang = 'en', className = '' }) => {
             {/* Awards */}
             <div className="py-12">
                 <h2 className="subhead-text">{t.awards}</h2>
-                <figure className="mt-6 max-w-2xl">
+                <figure className="mx-auto mt-6 max-w-2xl">
                     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border-2 border-black dark:border-slate-600 sm:aspect-[16/9]">
                         {/* He stands at the right of the frame; bias the crop
                             there so the phone's narrower box keeps him in it. */}
@@ -178,7 +178,7 @@ const Theatre = ({ lang = 'en', className = '' }) => {
                             className="object-cover object-[65%_40%]"
                         />
                     </div>
-                    <figcaption className="mt-3 text-sm text-slate-500 dark:text-slate-400">
+                    <figcaption className="mt-3 text-center text-sm text-slate-500 dark:text-slate-400">
                         {awardPhoto.caption[lang]}
                     </figcaption>
                 </figure>
