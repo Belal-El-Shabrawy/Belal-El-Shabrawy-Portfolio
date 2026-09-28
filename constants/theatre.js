@@ -52,20 +52,6 @@ export const plays = [
         image: '/theatre/40-waves.jpeg',
     },
     {
-        slug: 'they-passed-from-here',
-        year: 2025,
-        title: { en: 'They Passed from Here', ar: 'مرّوا من هنا' },
-        role: { en: 'Yuri', ar: 'يوري' },
-        festival: FESTIVALS.long,
-        universityTeam: true,
-        award: AWARD,
-        about: {
-            en: 'The secrets of a house full of immigrants in the middle of World War II.',
-            ar: 'أسرار بيت يسكنه المهاجرون في قلب الحرب العالمية الثانية.',
-        },
-        image: '/theatre/they-passed-from-here.jpeg',
-    },
-    {
         slug: 'maskar',
         year: 2025,
         title: { en: 'Maskar (Closed)', ar: 'مسكّر' },
@@ -78,6 +64,20 @@ export const plays = [
         },
         image: '/theatre/maskar-poster.jpeg',
         imageIsPoster: true,
+    },
+    {
+        slug: 'they-passed-from-here',
+        year: 2025,
+        title: { en: 'They Passed from Here', ar: 'مرّوا من هنا' },
+        role: { en: 'Yuri', ar: 'يوري' },
+        festival: FESTIVALS.long,
+        universityTeam: true,
+        award: AWARD,
+        about: {
+            en: 'The secrets of a house full of immigrants in the middle of World War II.',
+            ar: 'أسرار بيت يسكنه المهاجرون في قلب الحرب العالمية الثانية.',
+        },
+        image: '/theatre/they-passed-from-here.jpeg',
     },
     {
         slug: 'last-days-of-autumn',
@@ -131,3 +131,16 @@ export const press = [
 ];
 
 export const awards = plays.filter((p) => p.award);
+
+// Shown above the award cards.
+export const awardPhoto = {
+    image: '/theatre/award-40-waves.jpeg',
+    caption: {
+        en: 'Receiving the certificate for third place, Best Supporting Actor, for 40 Waves Before Drowning at the Cairo University Theatre Festival for Short Plays, 2025.',
+        ar: 'أثناء استلام شهادة التقدير عن المركز الثالث لأفضل ممثل دور ثانٍ عن عرض «أربعون موجة قبل الغرق» في مهرجان جامعة القاهرة للعروض القصيرة، 2025.',
+    },
+    alt: {
+        en: 'Belal Alaa El-Shabrawy receiving a certificate on stage for his Best Supporting Actor award',
+        ar: 'بلال الشبراوي يستلم شهادة التقدير على المسرح عن جائزة أفضل ممثل دور ثانٍ',
+    },
+};

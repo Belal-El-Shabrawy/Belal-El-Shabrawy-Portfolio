@@ -1,8 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { plays, press, awards } from '../constants/theatre';
+import { plays, press, awards, awardPhoto } from '../constants/theatre';
 
 const siteUrl = 'https://www.belalalaa.com';
+
+const LANGS = [
+    { code: 'en', label: 'English', href: '/theatre' },
+    { code: 'ar', label: 'العربية', href: '/ar/theatre' },
+];
 
 const COPY = {
     en: {
@@ -11,9 +16,7 @@ const COPY = {
             "Alongside software, I act. I've performed in more than ten plays, most of them with the theatre team of the Faculty of Computers and Artificial Intelligence at Cairo University, and won third place for Best Supporting Actor three times at Cairo University's theatre festivals.",
         ],
         facts: ['10+ plays', '3 awards', 'On stage since 2023'],
-        switchHref: '/ar/theatre',
-        switchLabel: 'اقرأ هذه الصفحة بالعربية',
-        switchLang: 'ar',
+        switchLabel: 'Page language',
         awards: 'Awards',
         plays: 'Plays',
         role: 'Role',
@@ -31,12 +34,9 @@ const COPY = {
         heading: ['على ', 'المسرح'],
         lede: [
             'إلى جانب البرمجة، أنا ممثل مسرحي. شاركت في أكثر من عشرة عروض مسرحية، معظمها مع فريق مسرح كلية الحاسبات والذكاء الاصطناعي بجامعة القاهرة، وحصلت على المركز الثالث لأفضل ممثل دور ثانٍ ثلاث مرات في مهرجانات جامعة القاهرة المسرحية.',
-            'أدرس في كلية الحاسبات والذكاء الاصطناعي بجامعة القاهرة، وأعمل مهندس برمجيات في Clinica Joelle وفي مركز CSDS بجامعة القاهرة.',
         ],
         facts: ['أكثر من 10 عروض', '3 جوائز', 'على المسرح منذ 2023'],
-        switchHref: '/theatre',
-        switchLabel: 'Read this page in English',
-        switchLang: 'en',
+        switchLabel: 'لغة الصفحة',
         awards: 'الجوائز',
         plays: 'العروض',
         role: 'الدور',
@@ -113,14 +113,37 @@ const Theatre = ({ lang = 'en', className = '' }) => {
                         )}
                     </p>
                 </div>
-                <Link
-                    href={t.switchHref}
-                    lang={t.switchLang}
-                    hrefLang={t.switchLang}
-                    className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                {/* Always English | العربية in that order (dir="ltr"), so the
+                    control looks identical on both pages and only the
+                    highlighted segment moves. Colour change only, no motion. */}
+                <nav
+                    aria-label={t.switchLabel}
+                    dir="ltr"
+                    className="inline-flex shrink-0 rounded-full border border-slate-200 bg-slate-100 p-1 text-sm font-medium dark:border-slate-700 dark:bg-slate-800"
                 >
-                    {t.switchLabel}
-                </Link>
+                    {LANGS.map((l) =>
+                        l.code === lang ? (
+                            <span
+                                key={l.code}
+                                lang={l.code}
+                                aria-current="page"
+                                className="rounded-full bg-white px-4 py-1.5 text-slate-900 shadow-sm dark:bg-slate-600 dark:text-white"
+                            >
+                                {l.label}
+                            </span>
+                        ) : (
+                            <Link
+                                key={l.code}
+                                href={l.href}
+                                lang={l.code}
+                                hrefLang={l.code}
+                                className="rounded-full px-4 py-1.5 text-slate-500 transition-colors hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 dark:text-slate-400 dark:hover:text-white"
+                            >
+                                {l.label}
+                            </Link>
+                        ),
+                    )}
+                </nav>
             </div>
 
             <div className="mt-5 flex max-w-3xl flex-col gap-3 text-slate-500 dark:text-slate-400">
@@ -143,6 +166,22 @@ const Theatre = ({ lang = 'en', className = '' }) => {
             {/* Awards */}
             <div className="py-12">
                 <h2 className="subhead-text">{t.awards}</h2>
+                <figure className="mt-6">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border-2 border-black dark:border-slate-600 sm:aspect-[16/9]">
+                        {/* He stands at the right of the frame; bias the crop
+                            there so the phone's narrower box keeps him in it. */}
+                        <Image
+                            src={awardPhoto.image}
+                            alt={awardPhoto.alt[lang]}
+                            fill
+                            sizes="(min-width: 1024px) 896px, 100vw"
+                            className="object-cover object-[65%_40%]"
+                        />
+                    </div>
+                    <figcaption className="mt-3 text-sm text-slate-500 dark:text-slate-400">
+                        {awardPhoto.caption[lang]}
+                    </figcaption>
+                </figure>
                 <ol className="mt-6 grid gap-4 sm:grid-cols-3">
                     {awards.map((p) => (
                         <li
