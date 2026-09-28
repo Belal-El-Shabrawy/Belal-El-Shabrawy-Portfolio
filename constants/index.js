@@ -141,7 +141,7 @@ export const experiences = [
             "Collaborated on PortfolioGenie, an AI-powered developer portfolio generator, as the program's graduation project.",
             "Applied prompt-engineering techniques to integrate AI-generated content into a real product workflow.",
         ],
-    },
+},
 ];
 
 export const socialLinks = [

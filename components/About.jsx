@@ -57,7 +57,10 @@ const About = () => {
                 <div className="flex w-full flex-col items-center gap-4 text-center sm:w-auto sm:items-start sm:text-left">
                     <h1 className="head-text">
                         Hi, I&apos;m <span className="blue-gradient_text
-                        font-semibold drop-shadow">Belal Alaa <span className="whitespace-nowrap">El-Shabrawy</span></span> <br />
+                        font-semibold drop-shadow">Belal Alaa <span className="whitespace-nowrap">El-Shabrawy</span></span>
+                        <span lang="ar" dir="rtl" className="mt-1 block text-lg sm:text-2xl font-medium text-slate-500 dark:text-slate-400">
+                            بلال علاء الشبراوي
+                        </span>
                     </h1>
                     <div className="flex flex-wrap justify-center gap-3 sm:justify-start sm:gap-4">
                         {aboutSocials.map((social) => (
@@ -91,6 +94,13 @@ const About = () => {
                 <p> I enjoy working across the whole stack, from building responsive,
                     intuitive interfaces to wiring up backends, databases, and AI-powered
                     integrations.</p>
+                <p> Outside of code, I act. I&apos;ve performed in more than ten plays and won
+                    third place for Best Supporting Actor three times at Cairo University&apos;s
+                    theatre festivals.{' '}
+                    <a href="/theatre" className="font-semibold text-blue-500 hover:text-blue-700">
+                        See my theatre work
+                    </a>
+                </p>
             </div>
             <div className="py-10 flex flex-col">
                 <h3 className="subhead-text">My Skills</h3>

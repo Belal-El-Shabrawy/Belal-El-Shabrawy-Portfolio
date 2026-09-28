@@ -24,14 +24,16 @@ const workSans = Work_Sans({
 export const metadata = {
   metadataBase: new URL('https://www.belalalaa.com'),
   title: {
-    default: "Belal Alaa El-Shabrawy - Full-Stack Developer",
-    template: "%s | Belal Alaa El-Shabrawy",
+    default: "Belal Alaa El-Shabrawy | بلال الشبراوي - Full-Stack Developer",
+    template: "%s | Belal Alaa El-Shabrawy | بلال الشبراوي",
   },
   description:
-    "Full-stack developer and Computer Science & AI student at Cairo University. I build production web apps with Next.js, TypeScript, Firebase and Node.js.",
+    "Full-stack developer and Computer Science & AI student at Cairo University. I build production web apps with Next.js, TypeScript, Firebase and Node.js. بلال علاء الشبراوي، مطوّر برمجيات وممثل مسرحي.",
   keywords: [
     "Belal Alaa El-Shabrawy",
     "Belal El-Shabrawy",
+    "بلال علاء الشبراوي",
+    "بلال الشبراوي",
     "Belal Alaa",
     "belalalaa",
     "full-stack developer",
@@ -114,6 +116,7 @@ const identityJsonLd = {
         'Three.js',
         'WordPress',
         'Retrieval-augmented generation (RAG)',
+        'Theatre acting',
       ],
       knowsLanguage: ['ar', 'en'],
       sameAs: [

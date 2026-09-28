@@ -640,6 +640,14 @@ body {
   pointer-events: none;
 }
 
+/* The Arabic theatre page. Unlayered, so it beats .head-text and the other
+   Poppins utilities, none of which have Arabic glyphs. --font-arabic is set by
+   next/font in app/ar/theatre/page.jsx. */
+.lang-ar,
+.lang-ar * {
+  font-family: var(--font-arabic), "Segoe UI", Tahoma, sans-serif;
+}
+
 /* Anchor jump from the scene down to the featured strip. */
 html {
   scroll-behavior: smooth;
