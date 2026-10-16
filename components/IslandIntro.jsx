@@ -25,7 +25,7 @@ const SCROLL_KEYS = new Set([' ', 'PageDown', 'PageUp', 'Home', 'End', 'ArrowDow
 
 const BUILD_MS = 2750; // name assembled and the dot has hopped into place
 const PORTRAIT_MS = 1700; // stars gather into the portrait
-const TITLE_HOLD_MS = 2900; // the finished frame stays up at least this long
+const TITLE_HOLD_MS = 1900; // the finished frame stays up at least this long
 const EXIT_MS = 1200;
 const GIVE_UP_MS = 20000; // past this the island's own spinner takes over
 const FAILSAFE_MS = 10000; // no hydration by then: drop the overlay entirely

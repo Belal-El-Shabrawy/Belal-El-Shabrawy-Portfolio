@@ -6,7 +6,7 @@ import IntroCard from './IntroCard';
 
 const InfoBox = ({ text, link, btnText, gradient }) => {
     return (
-        <div className={`text-sm sm:text-xl sm:leading-snug text-center py-3 px-4 sm:py-4 sm:px-8 text-white mx-4 sm:mx-5 max-w-md sm:max-w-none rounded-xl transition-transform hover:-translate-y-1 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-2 sm:border-4 border-black ${gradient}`}>
+        <div className={`pointer-events-auto text-sm sm:text-xl sm:leading-snug text-center py-3 px-4 sm:py-4 sm:px-8 text-white mx-4 sm:mx-5 max-w-md sm:max-w-2xl rounded-xl transition-transform hover:-translate-y-1 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-2 sm:border-4 border-black ${gradient}`}>
             <p className="font-medium text-sm sm:text-xl text-center mb-3 sm:mb-5">{text}</p>
             <Link 
                 href={link} 
@@ -54,10 +54,14 @@ const renderContent = {
     ),
 }
 
+// The row spans the full width only to centre the card, so it lets presses
+// through to the island (same as the hero in HomeHero.jsx): otherwise the empty
+// sky either side of a card is dead, and pressing there never turns the island.
+// The cards turn pointer events back on for themselves.
 const HomeInfo = ({ currentStage }) => {
     if(!currentStage) return null;
     return (
-        <div className="home-info absolute top-20 sm:top-28 left-0 right-0 z-10 flex items-center justify-center" onPointerDown={(e) => e.stopPropagation()}>
+        <div className="home-info pointer-events-none absolute top-20 sm:top-28 left-0 right-0 z-10 flex items-center justify-center" onPointerDown={(e) => e.stopPropagation()}>
             {renderContent[currentStage]}
         </div>
     );
