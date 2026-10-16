@@ -1,3 +1,4 @@
+import IslandIntro from '@/components/IslandIntro';
 import HomeClient from '@/components/HomeClient';
 import HomeHero from '@/components/HomeHero';
 import FeaturedWork from '@/components/FeaturedWork';
@@ -11,6 +12,8 @@ export const metadata = {
 export default function HomePage() {
   return (
     <>
+      <IslandIntro />
+
       {/* The scene stays exactly one viewport tall - that is what keeps the
           island fully framed on a phone - but the page no longer ends there. */}
       <section className="relative w-full h-screen-safe overflow-hidden">

@@ -163,6 +163,10 @@ export default function RootLayout({ children }) {
             __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark');}catch(e){}})();`,
           }}
         />
+        {/* Without JavaScript the home intro could never play or lift. */}
+        <noscript>
+          <style>{'#island-intro{display:none}'}</style>
+        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(identityJsonLd) }}

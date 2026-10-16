@@ -1,0 +1,460 @@
+/* The home intro (IslandIntro.jsx). Stages arrive as data-stage on the root:
+   measure → build → portrait → title, then .leaving on the way out. */
+
+/* Registered so the exit's soft edge can actually slide; an unregistered
+   custom property would only jump from start to end halfway through. */
+@property --horizon {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+.intro {
+  position: fixed;
+  inset: 0;
+  /* Above the nav (30) and the music player (50). */
+  z-index: 60;
+  overflow: hidden;
+  background: #050506;
+  color: #f4f5f7;
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+/* Set before first paint by the gate script on a repeat visit. */
+:global(html[data-intro='skip']) .intro {
+  display: none;
+}
+
+/* The scrollbar stays for the whole intro. Hiding it (overflow: hidden) and
+   bringing it back made it pop in mid-exit and shifted the page sideways by
+   its width, and Chrome will not hold the gutter open for the root with
+   scrollbar-gutter. Scrolling is blocked in IslandIntro.jsx instead; until the
+   overlay is gone the bar is drawn dark, so it reads as part of the intro. */
+:global(html:not([data-intro='skip'])):has(.intro) {
+  scrollbar-color: #2b2e35 #050506;
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.11),
+    rgba(255, 255, 255, 0.035) 28%,
+    transparent 58%
+  );
+  opacity: 0;
+  animation: glow 2.8s ease-out 0.1s forwards;
+}
+
+@keyframes glow {
+  25% {
+    opacity: 0.6;
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.75;
+  }
+}
+
+.portrait {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.centre {
+  position: relative;
+  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.intro:is([data-stage='portrait'], [data-stage='title']) .centre {
+  transform: translateY(var(--shift));
+}
+
+/* ---- The name ---------------------------------------------------------- */
+
+.word {
+  display: flex;
+  align-items: baseline;
+  margin: 0;
+  font-family: var(--font-poppins), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(3rem, 18vw, 9.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  perspective: 900px;
+  filter: drop-shadow(0 0.05em 0.06em rgba(0, 0, 0, 0.6));
+}
+
+[data-stage='measure'] .word {
+  visibility: hidden;
+}
+
+.letter,
+.dot {
+  display: inline-block;
+}
+
+.letter {
+  background: linear-gradient(180deg, #ffffff 0%, #eceef1 38%, #a7acb5 78%, #7c818b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.dot {
+  --below: 0.32em;
+  color: #e6e8ec;
+}
+
+/* Every letter starts folded up inside the pivot L and tumbles out to its
+   place: --dx is how far it sits from the L, measured once fonts are in. */
+[data-stage='build'] .letter {
+  animation: unfold 0.8s cubic-bezier(0.22, 0.8, 0.3, 1.08) var(--delay) both;
+  transform-origin: 50% 60%;
+}
+
+@keyframes unfold {
+  0% {
+    opacity: 0;
+    transform: translateX(var(--dx)) translateY(-0.1em) rotateZ(var(--spin)) rotateY(80deg)
+      rotateX(-140deg) scale(0.3);
+  }
+  18% {
+    opacity: 1;
+  }
+  62% {
+    transform: translateX(calc(var(--dx) * 0.06)) translateY(-0.14em) rotateZ(0deg) rotateY(-14deg)
+      rotateX(18deg) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) translateY(0) rotateZ(0deg) rotateY(0deg) rotateX(0deg) scale(1);
+  }
+}
+
+/* The L drops in from above, lands, tips over as the letters burst out of
+   it, and rocks back upright. */
+[data-stage='build'] .pivot {
+  animation: land 1.3s 0.8s both;
+  transform-origin: 20% 100%;
+}
+
+@keyframes land {
+  0% {
+    opacity: 0;
+    transform: translateY(-60vh);
+    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
+  }
+  6% {
+    opacity: 1;
+  }
+  22% {
+    transform: translateY(0) rotate(0deg) scaleY(1);
+    animation-timing-function: ease-out;
+  }
+  27% {
+    transform: translateY(0) rotate(0deg) scaleY(0.92);
+    animation-timing-function: ease-out;
+  }
+  40% {
+    transform: translateY(0) rotate(-24deg) scaleY(1);
+    animation-timing-function: ease-in-out;
+  }
+  68% {
+    transform: translateY(0) rotate(-10deg) scaleY(1);
+    animation-timing-function: cubic-bezier(0.3, 0.7, 0.4, 1.4);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The dot falls first and bounces under where the L will land, then hops
+   along to the end of the name. Sideways movement is on `translate` and
+   up-and-down on `transform`, so the hop is a real arc, not a zig-zag. */
+[data-stage='build'] .dot {
+  animation:
+    dot-fall 0.8s 0.15s both,
+    dot-hop-x 0.5s cubic-bezier(0.45, 0, 0.55, 1) 2.15s both,
+    dot-hop-y 0.5s 2.15s forwards;
+}
+
+@keyframes dot-fall {
+  0% {
+    opacity: 0;
+    transform: translateY(-60vh);
+    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
+  }
+  10% {
+    opacity: 1;
+  }
+  55% {
+    transform: translateY(var(--below));
+    animation-timing-function: cubic-bezier(0, 0.55, 0.45, 1);
+  }
+  73% {
+    transform: translateY(calc(var(--below) - 0.5em));
+    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
+  }
+  87% {
+    transform: translateY(var(--below));
+    animation-timing-function: cubic-bezier(0, 0.55, 0.45, 1);
+  }
+  94% {
+    transform: translateY(calc(var(--below) - 0.12em));
+    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(var(--below));
+  }
+}
+
+@keyframes dot-hop-x {
+  from {
+    translate: var(--dx) 0;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+@keyframes dot-hop-y {
+  0% {
+    transform: translateY(var(--below));
+    animation-timing-function: cubic-bezier(0.2, 0.6, 0.35, 1);
+  }
+  45% {
+    transform: translateY(-0.55em);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.9, 0.5);
+  }
+  82% {
+    transform: translateY(0);
+    animation-timing-function: ease-out;
+  }
+  91% {
+    transform: translateY(-0.07em);
+    animation-timing-function: ease-in;
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* ---- Under the name ---------------------------------------------------- */
+
+.below {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: max-content;
+  max-width: calc(100vw - 2rem);
+  margin-top: clamp(0.6rem, 2vw, 1.25rem);
+  translate: -50% 0;
+}
+
+.role {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 0.45em;
+  font-family: var(--font-poppins), system-ui, sans-serif;
+  font-size: clamp(0.95rem, 2.2vw, 1.3rem);
+  text-align: center;
+  color: #eef0f3;
+  opacity: 0;
+  transform: translateY(0.6em);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.role b {
+  font-weight: 600;
+}
+
+.role i {
+  font-weight: 300;
+  color: #a9aeb7;
+}
+
+[data-stage='title'] .role {
+  opacity: 1;
+  transform: none;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.loading[data-on='true'] {
+  opacity: 1;
+}
+
+.track {
+  width: 9rem;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.bar {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #3b82f6);
+  transform: scaleX(var(--p));
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+/* Before the island's chunk has even arrived there is no percentage yet. */
+.bar.unknown {
+  width: 35%;
+  transform: none;
+  animation: sweep 1.2s ease-in-out infinite;
+}
+
+@keyframes sweep {
+  from {
+    translate: -100% 0;
+  }
+  to {
+    translate: 290% 0;
+  }
+}
+
+.status {
+  margin: 0;
+  font-family: var(--font-work-sans), system-ui, sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8b909a;
+}
+
+.skip {
+  position: absolute;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  padding: 0.55rem 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #b8bdc6;
+  font: 500 0.8rem/1 var(--font-work-sans), system-ui, sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  opacity: 0;
+  animation: show 0.6s 1.2s forwards;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.skip:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.skip:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+/* It cannot do anything until the page is interactive. */
+[data-stage='measure'] .skip {
+  visibility: hidden;
+}
+
+@keyframes show {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---- Out to the island ------------------------------------------------- */
+
+/* The view tilts down out of the night sky: the portrait and the stars swing
+   up and away, and a soft horizon climbs from the bottom of the screen while
+   the 3D camera pitches down onto the island behind it (IntroCamera in
+   Home.jsx, driven by data-intro="leaving" on <html>). */
+.leaving {
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to top, transparent calc(var(--horizon) - 30vh), #000 var(--horizon));
+  mask-image: linear-gradient(to top, transparent calc(var(--horizon) - 30vh), #000 var(--horizon));
+  animation: horizon 1.2s cubic-bezier(0.55, 0, 0.25, 1) forwards;
+}
+
+@keyframes horizon {
+  to {
+    --horizon: 135vh;
+  }
+}
+
+/* Pivoting on the middle keystones it the way a camera pitching down would:
+   the top recedes while the whole sky slides up out of frame. */
+.leaving .sky {
+  animation: tilt-away 1.2s cubic-bezier(0.55, 0, 0.25, 1) forwards;
+}
+
+@keyframes tilt-away {
+  to {
+    transform: perspective(1100px) translateY(-42vh) rotateX(32deg) scale(0.9);
+    opacity: 0.35;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+.leaving .skip {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow,
+  .skip {
+    animation: none;
+    opacity: 1;
+  }
+  .centre {
+    transition: none;
+  }
+  .leaving {
+    -webkit-mask-image: none;
+    mask-image: none;
+    animation: fade-out 0.6s ease forwards;
+  }
+  .leaving .sky {
+    animation: none;
+  }
+}

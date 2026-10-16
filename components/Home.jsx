@@ -1,8 +1,8 @@
 'use client';
 
-import {Canvas} from "@react-three/fiber";
-import {useGLTF} from "@react-three/drei";
-import {useState, Suspense, useMemo, useEffect} from "react";
+import {Canvas, useFrame} from "@react-three/fiber";
+import {useGLTF, useProgress} from "@react-three/drei";
+import {useState, Suspense, useMemo, useEffect, useRef} from "react";
 import Loader from "./Loader";
 import Island from "./models/Island";
 import Sky from "./models/Sky";
@@ -12,6 +12,7 @@ import Plane from "./models/Plane";
 import HomeInfo from "./HomeInfo";
 import { useIsDark } from "../hooks/useIsDark";
 import { useViewport } from "../hooks/useViewport";
+import { reportSceneLoad } from "../hooks/useSceneLoad";
 
 // Warm the Contact page's fox model while the user is already on Home, so
 // /contact doesn't stall on model download+parse later. Only worth doing where
@@ -21,6 +22,78 @@ if (typeof window !== "undefined" &&
     window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
     useGLTF.preload("/3d/fox.glb");
 }
+
+// The intro overlay (components/IslandIntro.jsx) holds until the island is
+// really there. Its own component because useProgress re-renders on every
+// file that arrives, and re-rendering Home re-renders the whole Canvas.
+const LoadProgress = () => {
+    const { progress } = useProgress();
+    useEffect(() => {
+        reportSceneLoad({ progress });
+    }, [progress]);
+    return null;
+};
+
+// Sits in the same Suspense as the models, so it only mounts once every one of
+// them has loaded. Two frames later the island has been drawn at least once,
+// which is what the intro is waiting for - not just the downloads.
+const SceneReady = () => {
+    useEffect(() => {
+        let frame = requestAnimationFrame(() => {
+            frame = requestAnimationFrame(() => reportSceneLoad({ ready: true }));
+        });
+        return () => {
+            cancelAnimationFrame(frame);
+            reportSceneLoad({ ready: false });
+        };
+    }, []);
+    return null;
+};
+
+// While the intro covers the page the camera looks up into the sky, and as the
+// intro tilts away it pitches down onto the island, so the visitor lands on it
+// rather than having it uncovered. This is done on the camera, not with a CSS
+// transform on the page: R3F sizes the canvas from getBoundingClientRect, which
+// a transform skews, and nothing re-measures once the transform is gone - the
+// island was left rendering off-centre in an oversized canvas.
+const INTRO_PITCH = 0.6; // radians: the island sits just below the frame
+const INTRO_TILT_S = 1.2; // matches EXIT_MS in IslandIntro.jsx
+const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+
+const IntroCamera = () => {
+    const phase = useRef("idle"); // idle → up → tilting → done
+    const since = useRef(0);
+
+    useFrame(({ clock, camera }) => {
+        if (phase.current === "done") return;
+        const { introStarted, intro } = document.documentElement.dataset;
+
+        if (phase.current !== "tilting") {
+            if (introStarted && !intro &&
+                !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                phase.current = "up";
+                camera.rotation.x = INTRO_PITCH;
+                return;
+            }
+            if (phase.current === "up" && intro) {
+                phase.current = "tilting";
+                since.current = clock.elapsedTime;
+            } else {
+                // No intro this visit, or it was skipped before the island
+                // had even drawn: nothing to tilt.
+                phase.current = "done";
+                camera.rotation.x = 0;
+                return;
+            }
+        }
+
+        const t = Math.min(1, (clock.elapsedTime - since.current) / INTRO_TILT_S);
+        camera.rotation.x = INTRO_PITCH * (1 - easeInOutCubic(t));
+        if (t === 1) phase.current = "done";
+    });
+
+    return null;
+};
 
 const Home = () => {
     const [isRotating, setIsRotating] = useState(false);
@@ -90,7 +163,8 @@ const Home = () => {
                 hero in app/page.jsx occupies this spot, and stacking both would
                 put two cards on top of each other. */}
             {hasInteracted && currentStage && <HomeInfo currentStage={currentStage} />}
-            <Canvas 
+            <LoadProgress />
+            <Canvas
                 className={`w-full h-full bg-transparent ${isRotating ? 'cursor-grabbing' : 'cursor-grab'}`} 
                 onPointerDown={(e) => {
                     setIsRotating(true);
@@ -107,6 +181,9 @@ const Home = () => {
                 }}
                 camera={{near: 0.1, far: 1000}}
             >
+                {/* Outside the Suspense so it holds the camera up from the
+                    very first frame, while the models are still loading. */}
+                <IntroCamera />
                 <Suspense fallback={<Loader />}>
                     {/* Moonlight at night: the same rig, turned down, so the
                         island reads as lit from a cold sky rather than the sun. */}
@@ -141,8 +218,9 @@ const Home = () => {
                         scale={planeScale} 
                         isRotating={isRotating}
                         rotation={planeRotation} 
-                        planeDirection={planeDirection} 
+                        planeDirection={planeDirection}
                     />
+                    <SceneReady />
                 </Suspense>
             </Canvas>
             {!hasInteracted && (
