@@ -37,9 +37,10 @@ const Projects = () => {
                             <p className="mt-2 text-slate-500 dark:text-slate-400">
                                 {project.description}
                             </p>
+                            {project.link && (
                             <div className="mt-5 flex items-center gap-2 font-poppins">
-                                <Link 
-                                href={project.link} 
+                                <Link
+                                href={project.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="font-semibold text-blue-500 hover:text-blue-700"
@@ -50,6 +51,7 @@ const Projects = () => {
                                 width={16} height={16}
                                 className="w-4 h-4 object-contain" />
                             </div>
+                            )}
                         </div>
                     </div>
                 ))}

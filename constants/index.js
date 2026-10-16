@@ -182,6 +182,12 @@ export const projects = [
         link: 'https://clinicajoelleegypt.com/',
     },
     {
+        imageUrl: "/projects/NohaEissa.png",
+        name: 'Noha Eissa 3D Portfolio',
+        description: "A scroll-driven 3D portfolio for filmmaker and content creator Noha Eissa, built with Next.js 16, React Three Fiber and GSAP. Her hero photo shrinks onto the screen of a mirrorless camera modelled entirely in code, which turns through her shots as you scroll, and her reels and campaigns ride a curved WebGL carousel drawn with a custom rounded-card shader. I profiled it on integrated graphics and moved the heaviest transition into WebGL to keep the scroll smooth, with her Arabic film credits set right to left.",
+        link: 'https://noha-eissa-portfolio.vercel.app/',
+    },
+    {
         imageUrl: "/projects/Hospital.png",
         name: 'Hospital WhatsApp Bot',
         description: 'A live WhatsApp bot built with Node.js/Express that lets patients book medications and doctor appointments through conversational flows. Integrates the Groq AI API to read prescriptions and insurance cards, with Firebase and AWS Textract handling data storage and extraction.',
