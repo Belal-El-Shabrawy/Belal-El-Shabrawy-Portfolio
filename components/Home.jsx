@@ -1,8 +1,8 @@
 'use client';
 
-import {Canvas, useFrame} from "@react-three/fiber";
+import {Canvas, useFrame, useThree} from "@react-three/fiber";
 import {useGLTF, useProgress} from "@react-three/drei";
-import {useState, Suspense, useMemo, useEffect, useRef} from "react";
+import {useState, Suspense, useMemo, useEffect, useRef, useCallback} from "react";
 import Loader from "./Loader";
 import Island from "./models/Island";
 import Sky from "./models/Sky";
@@ -12,7 +12,7 @@ import Plane from "./models/Plane";
 import HomeInfo from "./HomeInfo";
 import { useIsDark } from "../hooks/useIsDark";
 import { useViewport } from "../hooks/useViewport";
-import { reportSceneLoad } from "../hooks/useSceneLoad";
+import { reportSceneLoad, useSceneLoad } from "../hooks/useSceneLoad";
 
 // Warm the Contact page's fox model while the user is already on Home, so
 // /contact doesn't stall on model download+parse later. Only worth doing where
@@ -35,18 +35,67 @@ const LoadProgress = () => {
 };
 
 // Sits in the same Suspense as the models, so it only mounts once every one of
-// them has loaded. Two frames later the island has been drawn at least once,
-// which is what the intro is waiting for - not just the downloads.
+// them has loaded; useFrame means it only runs once the canvas is drawing.
+// Its first frame draws everything, in view or not: it compiles every
+// material, uploads every texture, and switches off frustum culling for that
+// one frame, so even the plane and bird the intro's raised camera cannot see
+// yet send their geometry to the GPU. Left alone, all of that happens
+// mid-exit, the moment they swing into view, and the tilt down to the island
+// stutters. A couple of frames later the island has really been drawn, which
+// is what the intro waits for.
 const SceneReady = () => {
+    const frames = useRef(0);
+    const unculled = useRef([]);
+    useFrame(({ gl, scene, camera }) => {
+        frames.current += 1;
+        if (frames.current === 1) {
+            scene.traverse((object) => {
+                if (object.frustumCulled) {
+                    object.frustumCulled = false;
+                    unculled.current.push(object);
+                }
+                for (const material of [].concat(object.material || [])) {
+                    for (const value of Object.values(material)) {
+                        if (value && value.isTexture) gl.initTexture(value);
+                    }
+                }
+            });
+            // Already compiled by Warmup when the intro ran; otherwise this
+            // is the one place it happens.
+            gl.compile(scene, camera);
+        } else if (frames.current === 2) {
+            for (const object of unculled.current) object.frustumCulled = true;
+            unculled.current = [];
+        } else if (frames.current === 4) {
+            reportSceneLoad({ ready: true });
+        }
+    });
+    useEffect(() => () => reportSceneLoad({ ready: false }), []);
+    return null;
+};
+
+// When the intro lets the island go, its shaders are compiled with
+// compileAsync before anything is drawn: the GPU driver builds them in the
+// background, where plain compile() - or simply drawing - makes the page wait
+// for each one in turn, a freeze of most of a second. Home keeps the canvas
+// from drawing until this reports back.
+const Warmup = ({ enabled, onWarm }) => {
+    const get = useThree((state) => state.get);
     useEffect(() => {
-        let frame = requestAnimationFrame(() => {
-            frame = requestAnimationFrame(() => reportSceneLoad({ ready: true }));
-        });
-        return () => {
-            cancelAnimationFrame(frame);
-            reportSceneLoad({ ready: false });
+        if (!enabled) return;
+        let cancelled = false;
+        const finish = () => {
+            if (!cancelled) onWarm();
         };
-    }, []);
+        const { gl, scene, camera } = get();
+        gl.compileAsync(scene, camera).catch(() => {}).then(finish);
+        // Never left waiting on a driver that does not report back.
+        const fallback = setTimeout(finish, 3000);
+        return () => {
+            cancelled = true;
+            clearTimeout(fallback);
+        };
+    }, [enabled, get, onWarm]);
     return null;
 };
 
@@ -112,6 +161,16 @@ const Home = () => {
     }
 
     const isDark = useIsDark();
+    // Held back while the intro is mid-animation; see hooks/useSceneLoad.js.
+    const { held } = useSceneLoad();
+    // Once an intro has held the island, it also waits for Warmup before its
+    // first draw. Without an intro it draws straight away, as it always has.
+    const [introRan, setIntroRan] = useState(false);
+    const [warm, setWarm] = useState(false);
+    if (held && !introRan) {
+        setIntroRan(true);
+    }
+    const onWarm = useCallback(() => setWarm(true), []);
     const { aspect } = useViewport();
 
     // three.js `fov` is vertical, so a tall narrow screen has a *much* smaller
@@ -180,6 +239,7 @@ const Home = () => {
                     setPointerDirection(0);
                 }}
                 camera={{near: 0.1, far: 1000}}
+                frameloop={held || (introRan && !warm) ? "never" : "always"}
             >
                 {/* Outside the Suspense so it holds the camera up from the
                     very first frame, while the models are still loading. */}
@@ -220,6 +280,7 @@ const Home = () => {
                         rotation={planeRotation} 
                         planeDirection={planeDirection}
                     />
+                    <Warmup enabled={introRan && !held && !warm} onWarm={onWarm} />
                     <SceneReady />
                 </Suspense>
             </Canvas>

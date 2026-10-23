@@ -1,33 +1,36 @@
 'use client';
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState, useSyncExternalStore } from 'react';
 import InlineScript from './InlineScript';
-import ParticlePortrait from './ParticlePortrait';
-import { useSceneLoad } from '../hooks/useSceneLoad';
+import IntroCanvas from './IntroCanvas';
+import { reportSceneLoad, useSceneLoad } from '../hooks/useSceneLoad';
 import styles from './IslandIntro.module.css';
 
 // The opening titles, played once per visit while the island loads behind
-// them: a dot drops and bounces, an L lands on it, the rest of the name
-// tumbles out of that L, the dot hops into place as a full stop, then the
-// name settles onto a portrait that gathers out of a field of stars. If the
+// them: an eye drawn in ASCII surfaces out of the dark, opens, blinks, looks
+// around, and the view glides into its pupil, which opens onto a sky of
+// shining stars where a portrait gathers (all drawn by intro/scene.js, through
+// IntroCanvas.jsx). The name then decodes onto the portrait's chest. If the
 // models are still not in by then, it holds there with a progress line rather
 // than opening onto an empty sky. To leave, the view tilts down out of the
-// night sky and onto the island, which rises and levels out underneath.
+// night sky and onto the island.
 //
-// The name is plain CSS keyframes on purpose: those run on the compositor, so
-// they stay smooth while three.js is busy parsing models on the main thread.
+// Each step starts when the one before reports it has got there (the eye's
+// pupil has opened, the portrait has formed), not on a timer: the page stalls
+// while the island loads, and a timer would cut a step short.
 
 const NAME = 'BELAL.';
-const PIVOT = 2; // the middle L lands first; the other letters unfold out of it
-const DOT = NAME.length - 1;
 const PLAYED_KEY = 'intro-played';
 const SCROLL_KEYS = new Set([' ', 'PageDown', 'PageUp', 'Home', 'End', 'ArrowDown', 'ArrowUp']);
 
-const BUILD_MS = 2750; // name assembled and the dot has hopped into place
-const PORTRAIT_MS = 1700; // stars gather into the portrait
 const TITLE_HOLD_MS = 1900; // the finished frame stays up at least this long
 const EXIT_MS = 1200;
 const GIVE_UP_MS = 20000; // past this the island's own spinner takes over
+// Should the drawing never report back (a broken worker, say), the name
+// comes up anyway rather than the intro sitting on a blank sky.
+const TITLE_BY_MS = 14000;
+// How long after the name has settled the island may draw for the first time.
+const RELEASE_AFTER_NAME_MS = 400;
 const FAILSAFE_MS = 10000; // no hydration by then: drop the overlay entirely
 
 // Where the name lands on the portrait, as a fraction of its height: the chest.
@@ -49,70 +52,107 @@ const shouldSkip = () => {
 };
 const noSubscribe = () => () => {};
 
-const letterStyle = (i, offsets) => {
-    const side = Math.sign(i - PIVOT);
-    const reach = Math.abs(i - PIVOT);
-    return {
-        '--dx': offsets ? `${offsets[i]}px` : '0px',
-        '--spin': `${side * -110}deg`,
-        '--delay': `${1.08 + (reach - 1) * 0.22 + (side > 0 ? 0.06 : 0)}s`,
-    };
-};
+// The name decodes in the eye's own terms: each letter churns through dense
+// ASCII glyphs, left to right, then settles.
+const DECODE_GLYPHS = 'XYUJCLQ0OZmwqpdbkhao*#MW&8%B@$';
+const DECODE_START_MS = 150;
+const DECODE_STEP_MS = 85;
+const DECODE_CHURN_MS = 320;
+const DECODE_MS = DECODE_START_MS + NAME.length * DECODE_STEP_MS;
+const SETTLED = true;
 
 export default function IslandIntro() {
     const skip = useSyncExternalStore(noSubscribe, shouldSkip, () => false);
     const { progress, ready } = useSceneLoad();
 
-    const [stage, setStage] = useState('measure'); // measure → build → portrait → title
+    const [stage, setStage] = useState('wait'); // wait → eye → portrait → title
     const [still, setStill] = useState(false);
-    const [offsets, setOffsets] = useState(null);
+    // Per letter: '' not shown yet, a glyph while it churns, SETTLED when done.
+    const [glyphs, setGlyphs] = useState(() => NAME.split('').map(() => ''));
     const [shift, setShift] = useState(0);
     const [holdDone, setHoldDone] = useState(false);
     const [gaveUp, setGaveUp] = useState(false);
     const [skipped, setSkipped] = useState(false);
     const [done, setDone] = useState(false);
-    const letters = useRef([]);
 
     const leaving = skipped || (stage === 'title' && holdDone && (ready || gaveUp));
     const waiting = stage === 'title' && holdDone && !leaving;
+    const decoded = glyphs.every((glyph) => glyph === SETTLED);
 
-    // Measure where each letter will sit, then start the build. Fonts first:
-    // measuring the fallback face would send every letter to the wrong spot.
+    // Runs the timeline. Reduced motion skips straight to the finished frame.
     useEffect(() => {
         if (shouldSkip()) return;
         const root = document.documentElement;
         root.dataset.introStarted = '1';
+        reportSceneLoad({ held: true });
 
-        let cancelled = false;
         const timers = [];
         const later = (fn, ms) => timers.push(setTimeout(fn, ms));
         later(() => setGaveUp(true), GIVE_UP_MS);
-
-        const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
-        Promise.race([fontsReady, new Promise((r) => setTimeout(r, 1500))]).then(() => {
-            if (cancelled) return;
+        later(() => {
             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                 setStill(true);
+                setGlyphs(NAME.split('').map(() => SETTLED));
                 setStage('title');
                 return;
             }
-            const centre = (el) => {
-                const box = el.getBoundingClientRect();
-                return box.left + box.width / 2;
-            };
-            const pivot = centre(letters.current[PIVOT]);
-            setOffsets(letters.current.map((el) => pivot - centre(el)));
-            setStage('build');
-            later(() => setStage('portrait'), BUILD_MS);
-            later(() => setStage('title'), BUILD_MS + PORTRAIT_MS);
-        });
+            setStage('eye');
+            later(() => setStage('title'), TITLE_BY_MS);
+        }, 0);
 
         return () => {
-            cancelled = true;
             timers.forEach(clearTimeout);
             delete root.dataset.introStarted;
+            reportSceneLoad({ held: false });
         };
     }, []);
+
+    const openPupil = useCallback(() => setStage((s) => (s === 'eye' ? 'portrait' : s)), []);
+    const portraitFormed = useCallback(() => setStage((s) => (s === 'eye' || s === 'portrait' ? 'title' : s)), []);
+
+    // The island's first draw freezes the page for a moment (shaders,
+    // textures), so it is held back until the name has settled and nothing on
+    // screen is moving but the portrait's shimmer - a beat after the full stop
+    // lands, or the freeze swallows it being typed. Sooner if the visitor
+    // skips, or the wait has gone on too long.
+    useEffect(() => {
+        if (leaving || gaveUp) {
+            reportSceneLoad({ held: false });
+            return;
+        }
+        if (!decoded) return;
+        const timer = setTimeout(() => reportSceneLoad({ held: false }), RELEASE_AFTER_NAME_MS);
+        return () => clearTimeout(timer);
+    }, [decoded, leaving, gaveUp]);
+
+    useEffect(() => {
+        if (stage !== 'title' || still) return;
+        const start = performance.now();
+        let last = 0;
+        let frame;
+        const tick = (now) => {
+            const t = now - start;
+            if (t >= DECODE_MS) {
+                setGlyphs(NAME.split('').map(() => SETTLED));
+                return;
+            }
+            // ~20 changes a second: any faster and the glyphs are just noise.
+            if (now - last > 50) {
+                last = now;
+                setGlyphs(
+                    NAME.split('').map((_, i) => {
+                        const settle = DECODE_START_MS + (i + 1) * DECODE_STEP_MS;
+                        if (t >= settle) return SETTLED;
+                        if (t < settle - DECODE_CHURN_MS) return '';
+                        return DECODE_GLYPHS[Math.floor(Math.random() * DECODE_GLYPHS.length)];
+                    })
+                );
+            }
+            frame = requestAnimationFrame(tick);
+        };
+        frame = requestAnimationFrame(tick);
+        return () => cancelAnimationFrame(frame);
+    }, [stage, still]);
 
     // The portrait reports where it will be drawn; the name drops to its chest.
     const placeName = useCallback((box) => {
@@ -189,35 +229,48 @@ export default function IslandIntro() {
                 data-stage={stage}
                 style={{ '--shift': `${shift}px` }}
             >
+                {/* Every glyph the name will use, painted once in the background
+                    colour as the page first appears, so the GPU has them cached
+                    before the decode needs them. Drawn cold, the first churning
+                    glyphs took over 100ms and froze the portrait with them. */}
+                <span className={styles.warm} aria-hidden="true">
+                    {NAME + DECODE_GLYPHS}
+                </span>
+
                 {/* Everything that tilts away on the way out; the skip button stays put. */}
                 <div className={styles.sky}>
-                    <div className={styles.glow} aria-hidden="true" />
-                    <ParticlePortrait
-                        src="/intro/belal-particles.bin"
-                        play={stage === 'portrait' || stage === 'title'}
+                    <IntroCanvas
+                        play={stage !== 'wait'}
                         still={still}
+                        frozen={leaving}
                         onBox={placeName}
-                        className={styles.portrait}
+                        onPupilOpen={openPupil}
+                        onFormed={portraitFormed}
+                        className={styles.layer}
                     />
 
                     <div className={styles.centre} aria-hidden="true">
+                        {/* The real letters always hold their place, so the name
+                            does not jitter in width while it decodes; a churning
+                            glyph is drawn over a hidden letter. */}
                         <p className={styles.word}>
-                            {NAME.split('').map((ch, i) => (
-                                <span
-                                    key={i}
-                                    ref={(el) => {
-                                        letters.current[i] = el;
-                                    }}
-                                    className={
-                                        i === DOT
-                                            ? styles.dot
-                                            : `${styles.letter} ${i === PIVOT ? styles.pivot : ''}`
-                                    }
-                                    style={letterStyle(i, offsets)}
-                                >
-                                    {ch}
-                                </span>
-                            ))}
+                            {NAME.split('').map((ch, i) => {
+                                const glyph = glyphs[i];
+                                const kind = ch === '.' ? styles.dot : styles.letter;
+                                if (glyph === SETTLED) {
+                                    return (
+                                        <span key={i} className={kind}>
+                                            {ch}
+                                        </span>
+                                    );
+                                }
+                                return (
+                                    <span key={i} className={`${kind} ${styles.pending}`}>
+                                        {ch}
+                                        {glyph && <span className={`${styles.letter} ${styles.glyph}`}>{glyph}</span>}
+                                    </span>
+                                );
+                            })}
                         </p>
 
                         <div className={styles.below}>

@@ -1,7 +1,7 @@
 """Builds public/intro/belal-particles.bin, the particle portrait in the home intro.
 
 The photo itself never ships: this reduces it to a grid of brightness values,
-one byte per particle, and components/ParticlePortrait.jsx draws each non-zero
+one byte per particle, and components/intro/scene.js draws each non-zero
 cell as a dot. Re-run it after changing the source photo or the mask:
 
     pip install opencv-python numpy
